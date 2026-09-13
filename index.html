@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AYRA — Wellness, Connected.</title>
+<meta name="description" content="AYRA is a human-centered wellness ecosystem, rooted in trusted products, practical education, and a community that grows together.">
+<meta name="theme-color" content="#F4D5A4">
+
+<link rel="icon" href="assets/brand/AYRA_Logo_Colored.svg" type="image/svg+xml">
+
+<meta property="og:title" content="AYRA — Wellness, Connected.">
+<meta property="og:description" content="A human-centered wellness ecosystem, rooted in trusted products, practical education, and a community that grows together.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/cta-field.jpg">
+
+<link rel="preload" href="assets/fonts/SourceSerif4-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Montserrat-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css">
+
+<!-- Marks the document as JS-capable before first paint, so the scroll-reveal
+     start state is never applied to visitors without JavaScript. -->
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============================= icon sprite ============================= -->
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-petal" viewBox="0 0 24 24">
+    <path d="M21.4 2.6C21.4 12.5 14.1 20.6 4.6 21.4 2.2 12.4 10.1 3.3 21.4 2.6Z"/>
+  </symbol>
+  <!-- The three Philosophy card glyphs, taken from Studies/Icons/*.svg.
+       Only Layer_1 (the line art) is carried over: each source file also
+       contains its own #eb8554 disc, which this page draws itself via
+       .pillar__icon and tints differently at rest and on hover.
+
+       viewBox is the source's own 78.49x80 — the canvas its disc filled — so
+       mapping it onto .pillar__icon at 100% puts the art at exactly the scale
+       and position it was drawn at. Stroke is currentColor, which the icon
+       inherits, so the page's colour is untouched. -->
+  <symbol id="i-sprout" viewBox="0 0 78.49 80">
+    <g fill="none" stroke="currentColor" stroke-width="1.85"
+       stroke-linecap="round" stroke-linejoin="round">
+      <path d="M54.89,36.09c-3.83,4.25-9.15,6.28-14.39,6.02-.69-5.3.85-10.87,4.69-15.12,3.83-4.25,9.15-6.28,14.39-6.02.69,5.31-.85,10.87-4.69,15.12Z"/>
+      <path d="M50.04,30.4s-13.76,10.14-16.86,33.05"/>
+      <path d="M18.71,48.76c3.17,3.52,7.56,5.2,11.89,4.99.57-4.39-.71-9-3.88-12.52-3.17-3.52-7.56-5.2-11.89-4.99-.57,4.39.71,9,3.88,12.52Z"/>
+      <path d="M23.43,44.33s7.96,5.86,9.75,19.12"/>
+    </g>
+  </symbol>
+  <symbol id="i-people" viewBox="0 0 78.49 80">
+    <g fill="none" stroke="currentColor" stroke-width="1.85"
+       stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="40.08" cy="26.04" r="6.5"/>
+      <path d="M27.73,53.26v-6.05c0-6.82,5.53-12.34,12.34-12.34s12.34,5.53,12.34,12.34v6.05"/>
+      <circle cx="23.07" cy="33.73" r="4.66"/>
+      <path d="M14.21,53.26v-4.34c0-4.89,3.96-8.85,8.85-8.85,2.19,0,4.19.79,5.74,2.11"/>
+      <circle cx="55.43" cy="33.73" r="4.66"/>
+      <path d="M50.91,41.3c1.32-.78,2.86-1.23,4.51-1.23,4.89,0,8.85,3.96,8.85,8.85v4.34"/>
+    </g>
+  </symbol>
+  <symbol id="i-spark" viewBox="0 0 78.49 80">
+    <g fill="none" stroke="currentColor" stroke-width="1.85"
+       stroke-linecap="round" stroke-linejoin="round">
+      <path d="M39.25,62.98c0-12.69,10.29-22.98,22.98-22.98-12.69,0-22.98-10.29-22.98-22.98,0,12.69-10.29,22.98-22.98,22.98,12.69,0,22.98,10.29,22.98,22.98Z"/>
+    </g>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <path d="M4.5 12.6 9.5 17.5 19.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<!-- ===========================================================================
+     .page-body wraps everything except the footer. The nav is sticky *within*
+     it, so once this wrapper ends the nav scrolls away on its own — the
+     footer-disappear behaviour is pure CSS, no observer.
+     =========================================================================== -->
+<div class="page-body">
+
+  <!-- ================================ nav ================================ -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="#top" aria-label="AYRA — home">
+        <img class="nav__mark nav__mark--colour"
+             src="assets/brand/AYRA_Logo_Colored.svg" alt="" width="70" height="33">
+        <img class="nav__mark nav__mark--light" aria-hidden="true"
+             src="assets/brand/AYRA_Logo_White.svg" alt="" width="70" height="33">
+      </a>
+
+      <!-- Tablet and phone only; display:none from 1025px up, where the row
+           itself fits. aria-expanded is the state — the class on .nav is only
+           for styling and for telling the auto-hide to stand down. -->
+      <button class="nav__burger" type="button" id="nav-burger"
+              aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu">
+        <span class="nav__burger-box" aria-hidden="true">
+          <span class="nav__burger-bar"></span>
+          <span class="nav__burger-bar"></span>
+          <span class="nav__burger-bar"></span>
+        </span>
+      </button>
+
+      <nav class="nav__menu" id="nav-menu" aria-label="Primary">
+        <a class="nav__link" href="#about">About</a>
+        <a class="nav__link" href="#philosophy">Philosophy</a>
+        <a class="nav__link" href="#story">The Single Petal</a>
+        <a class="nav__link" href="#gallery">Gallery</a>
+        <a class="nav__link" href="#join">Join Us</a>
+        <a class="nav__link" href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+<main id="main">
+
+  <!-- ============================ intro sequence ===========================
+       The hero and the About section are one pinned scroll sequence. Over
+       ~300vh the tagline parts, the portrait arrives in the gap it opens,
+       then grows out to full width and settles into the About card.
+
+       main.js drives it from a single scroll progress value. Without JS — or
+       with prefers-reduced-motion — the CSS end state stands on its own and
+       this reads as the finished About composition.
+       ====================================================================== -->
+  <section class="intro" id="top" data-nav-theme="light">
+    <div class="intro__pin">
+
+      <div class="intro__bg" aria-hidden="true">
+        <!-- Decorative backdrop. Muted + playsinline so iOS plays it inline
+             rather than going fullscreen; the poster covers the first frames
+             and stands in entirely when the visitor prefers reduced motion.
+
+             The 720p file is the default because <source media> is not honoured
+             inside <video> — so the small file is what a no-JS visitor gets, and
+             main.js upgrades to data-src-hd on wide screens with a good
+             connection. -->
+        <video class="intro__video" autoplay muted loop playsinline
+               preload="metadata" poster="assets/video/hero-poster.jpg"
+               tabindex="-1" disablepictureinpicture
+               data-src-hd="assets/video/hero.mp4">
+          <source src="assets/video/hero-mobile.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <div class="intro__stage">
+
+        <img class="intro__wordmark" src="assets/brand/AYRA_Logo_Colored.svg"
+             alt="AYRA" width="850" height="400">
+
+        <p class="intro__tagline">
+          <span class="intro__word intro__word--l">Wellness,</span>
+          <span class="intro__word intro__word--r">Connected.</span>
+        </p>
+
+        <!-- Present at rest, gone once the sequence starts. -->
+        <span class="intro__scroll" aria-hidden="true">
+          <span>Scroll</span>
+          <span class="intro__scroll-line"></span>
+        </span>
+
+        <figure class="intro__panel">
+          <!-- Decorative: the copy beside it carries the meaning, so this is
+               aria-hidden rather than captioned. Muted + playsinline so iOS
+               plays it inline; the poster covers the first frames and stands
+               in entirely under reduced motion. Same 720p-by-default,
+               upgrade-on-capable-screens pattern as the hero backdrop. -->
+          <video class="intro__photo" autoplay muted loop playsinline
+                 preload="metadata" poster="assets/img/portrait-poster.jpg"
+                 tabindex="-1" disablepictureinpicture aria-hidden="true"
+                 width="1916" height="1080"
+                 data-src-hd="assets/video/portrait.mp4">
+            <source src="assets/video/portrait-mobile.mp4" type="video/mp4">
+          </video>
+
+          <div class="intro__copy">
+            <p class="eyebrow eyebrow--glow">
+              About Ayra
+              <svg class="petal" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-petal"/></svg>
+            </p>
+
+            <h2 class="h2" data-blur-words data-blur-window="0.86 1">Rooted in people.<br>Created for community.</h2>
+
+            <p class="prose">
+              AYRA is a holistic wellness ecosystem that combines trusted products,
+              practical education, community events, digital media, and entrepreneurial
+              opportunities. We help people improve their health and lifestyle while
+              becoming part of a supportive community that grows together.
+            </p>
+          </div>
+        </figure>
+
+      </div>
+    </div>
+
+    <!-- Sits exactly where the pin releases, so "Our Story" lands on the
+         finished About composition rather than past it. -->
+    <span class="intro__anchor" id="about" tabindex="-1"></span>
+  </section>
+
+  <!-- ============================= philosophy ============================= -->
+  <!-- ====================================================================
+       One continuous ambient backdrop for the three sections between the hero
+       and the gallery. It is a single sticky element, not a layer per section,
+       which is the whole point: per-section layers each brought their own top
+       and bottom edge, and those edges read as a seam at every boundary.
+
+       The gradient chain that used to live on .philosophy, .venn and
+       .petal-story lives here too, for the same reason. As one gradient over
+       one box, boundary alignment stops mattering — there is nothing to
+       misalign. The three sections are transparent and ride on top.
+       ==================================================================== -->
+  <div class="ambient">
+    <div class="ambient__bg" aria-hidden="true">
+      <video class="ambient__video" autoplay muted loop playsinline
+             preload="metadata" poster="assets/video/hero-poster.jpg"
+             tabindex="-1" disablepictureinpicture
+             data-src-hd="assets/video/hero.mp4">
+        <source src="assets/video/hero-mobile.mp4" type="video/mp4">
+      </video>
+    </div>
+
+  <section class="philosophy" id="philosophy" data-nav-theme="light">
+    <div class="philosophy__glow" data-parallax="26" aria-hidden="true"></div>
+
+    <div class="container">
+      <header class="section-head reveal">
+        <svg class="petal petal--lg" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-petal"/></svg>
+        <p class="eyebrow eyebrow--green">Our Philosophy</p>
+        <h2 class="h2 h2--center" data-blur-words>Wellness becomes stronger<br>when shared.</h2>
+      </header>
+
+      <ul class="pillars">
+        <li class="pillar reveal" data-delay="1">
+          <div class="pillar__top">
+            <h3 class="pillar__title">Personal<br>Wellness</h3>
+            <span class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 78.49 80"><use href="#i-sprout"/></svg>
+            </span>
+          </div>
+          <p class="pillar__text">
+            Support for better health, sustainable habits, balance, and personal growth.
+          </p>
+        </li>
+
+        <li class="pillar reveal" data-delay="2">
+          <div class="pillar__top">
+            <h3 class="pillar__title">Community<br>Support</h3>
+            <span class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 78.49 80"><use href="#i-people"/></svg>
+            </span>
+          </div>
+          <p class="pillar__text">
+            Connection, guidance, encouragement, and a genuine sense of belonging.
+          </p>
+        </li>
+
+        <li class="pillar reveal" data-delay="3">
+          <div class="pillar__top">
+            <h3 class="pillar__title">Practical<br>Education</h3>
+            <span class="pillar__icon" aria-hidden="true">
+              <svg viewBox="0 0 78.49 80"><use href="#i-spark"/></svg>
+            </span>
+          </div>
+          <p class="pillar__text">
+            Simple and understandable wellness knowledge for everyday living.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ single petal ============================ -->
+  <!-- ====================================================================
+       The Venn diagram — a pinned sequence that draws itself in, holds, and
+       clears again. Artwork from Studies/Icons/Ayra_VennDiagram.svg.
+
+       Two deliberate departures from that file:
+       - Its 1440x810 #f3d4a3 background rect is dropped. A fixed-size rect
+         cannot fill a viewport of another shape, and the section's own
+         background does the job while keeping both joins seamless.
+       - The gradient ids are prefixed `venn-`. They ship as `linear-gradient`,
+         `linear-gradient1`… which are document-global once inlined and would
+         collide with any other inlined SVG. Re-exporting from Illustrator
+         means re-applying that prefix.
+
+       The .stN class names are kept exactly as exported, so a re-export drops
+       in cleanly. They are scoped under .venn__svg in styles.css.
+       ==================================================================== -->
+  <section class="venn" id="petal-venn" data-nav-theme="light" aria-labelledby="venn-title">
+    <h2 class="visually-hidden" id="venn-title">Personal wellness and community support meet in the Single Petal</h2>
+
+    <div class="venn__pin">
+      <!-- viewBox is cropped to the artwork, not the export's canvas. The
+           circles span x 256->1184 and y 152->717 of the original 1440x810, so
+           roughly a third of that canvas is empty margin. Trimming it to the
+           content plus 24 units of breathing room magnifies the whole diagram
+           by ~1.4x at the same rendered width, which is the difference between
+           legible and not on a narrow screen. Nothing is cropped away and no
+           coordinate inside the SVG changes. -->
+      <svg class="venn__svg" viewBox="232 128 976 613" role="img"
+           aria-label="Two overlapping circles. The left is Personal Wellness — health, balance, growth. The right is Community Support — connection, guidance, belonging. Where they overlap is The Single Petal: the individual nurtured by wellness and community.">
+        <defs>
+          <linearGradient id="venn-grad-right" x1="-6116.59" y1="434.46" x2="-5074.87" y2="434.46" gradientTransform="translate(-4200.0459) scale(-1 1)" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#eb8554"/>
+            <stop offset=".3" stop-color="#eda170"/>
+            <stop offset=".76" stop-color="#f1c594"/>
+            <stop offset="1" stop-color="#f3d4a3"/>
+          </linearGradient>
+          <!-- gradientTransform is load-bearing, not noise: xlink:href inherits
+               it too, and venn-grad-right carries a scale(-1 1) flip. Without
+               this identity matrix the left circle inherits that flip, its
+               gradient lands off-canvas and the whole circle renders flat. The
+               export has it for exactly this reason. -->
+          <linearGradient id="venn-grad-left" x1="-476.54" y1="434.46" x2="565.18" y2="434.46" gradientTransform="matrix(1,0,0,1,0,0)" gradientUnits="userSpaceOnUse" xlink:href="#venn-grad-right"/>
+          <!-- gradientTransform here is the exact inverse of the transform on the
+               circle that uses it. A userSpaceOnUse gradient travels with its
+               element, so rotating a circle to change where its stroke starts
+               drawing would rotate this ramp with it and repaint the artwork.
+               Undoing it here keeps the draw direction free to change while the
+               colour lands exactly where the export put it. -->
+          <linearGradient id="venn-grad-stroke-right" x1="617.9" y1="434.46" x2="1184.35" y2="434.46" gradientUnits="userSpaceOnUse" gradientTransform="translate(901.13 434.46) scale(-1 1) translate(-901.13 -434.46) rotate(-90 901.13 434.46)">
+            <stop offset="0" stop-color="#eb8554"/>
+            <stop offset=".11" stop-color="#ec9564"/>
+            <stop offset=".33" stop-color="#efb07f"/>
+            <stop offset=".55" stop-color="#f1c493"/>
+            <stop offset=".77" stop-color="#f2d09f"/>
+            <stop offset="1" stop-color="#f3d4a3"/>
+          </linearGradient>
+          <linearGradient id="venn-grad-stroke-left" x1="255.65" y1="434.46" x2="822.1" y2="434.46" gradientUnits="userSpaceOnUse" gradientTransform="rotate(90 538.87 434.46)">
+            <stop offset="0" stop-color="#f3d4a3"/>
+            <stop offset=".23" stop-color="#f2d09f"/>
+            <stop offset=".45" stop-color="#f1c493"/>
+            <stop offset=".67" stop-color="#efb07f"/>
+            <stop offset=".89" stop-color="#ec9564"/>
+            <stop offset="1" stop-color="#eb8554"/>
+          </linearGradient>
+        </defs>
+
+        <g id="CircleGrdientRight" class="venn__part"><circle class="st10" cx="901.13" cy="434.46" r="282.72"/></g>
+        <g id="CircleGradientLeft" class="venn__part"><circle class="st9" cx="538.87" cy="434.46" r="282.72"/></g>
+        <g id="CircleGradientStokeRight" class="venn__part" data-venn-draw><circle class="st3" cx="901.13" cy="434.46" r="282.72" transform="rotate(90 901.13 434.46) translate(901.13 434.46) scale(-1 1) translate(-901.13 -434.46)"/></g>
+        <g id="CircleGradientStokeLeft" class="venn__part" data-venn-draw><circle class="st4" cx="538.87" cy="434.46" r="282.72" transform="rotate(-90 538.87 434.46)"/></g>
+
+        <g id="IntersectionShape" class="venn__part">
+          <path class="st13" d="M821.6,434.45c0,87.23-39.51,165.23-101.6,217.09-62.09-51.84-101.6-129.85-101.6-217.09s39.51-165.23,101.6-217.08c62.09,51.86,101.6,129.86,101.6,217.08Z"/>
+        </g>
+
+        <g id="LineRight" class="venn__part"><line class="st1" x1="929.92" y1="460.88" x2="1020.33" y2="460.88"/></g>
+        <g id="LineLeft" class="venn__part"><line class="st1" x1="419.67" y1="460.88" x2="510.09" y2="460.88"/></g>
+        <g id="LineMiddle" class="venn__part"><line class="st0" x1="692.85" y1="460.88" x2="744.86" y2="460.88"/></g>
+
+        <g id="TextMiddle" class="venn__part">
+          <text class="st5" transform="translate(670.03 492.33)"><tspan x="0" y="0">The individual </tspan><tspan x="7.65" y="17.3">nurtured by </tspan><tspan x="4.27" y="34.59">wellness and </tspan><tspan x="9.55" y="51.89">community</tspan></text>
+        </g>
+        <g id="TextRight" class="venn__part">
+          <text class="st7" transform="translate(851.68 492.33)"><tspan class="st12" x="0" y="0">Connection </tspan><tspan class="st13" x="86.6" y="0">·</tspan><tspan class="st12" x="90.13" y="0" xml:space="preserve"> Guidance </tspan><tspan class="st13" x="166.3" y="0">·</tspan><tspan class="st12" x="169.83" y="0" xml:space="preserve"> Belonging</tspan></text>
+        </g>
+        <g id="TextLeft" class="venn__part">
+          <text class="st7" transform="translate(374.49 492.33)"><tspan class="st12" x="0" y="0">Health </tspan><tspan class="st13" x="50.65" y="0">·</tspan><tspan class="st12" x="54.18" y="0" xml:space="preserve"> Balance </tspan><tspan class="st13" x="119.36" y="0">·</tspan><tspan class="st12" x="122.89" y="0" xml:space="preserve"> Growth</tspan></text>
+        </g>
+
+        <g id="TheSinglePetal" class="venn__part">
+          <text class="st6" transform="translate(648.71 408.32)"><tspan x="0" y="0">The Single</tspan><tspan x="36.87" y="34.59">Petal</tspan></text>
+        </g>
+        <g id="CommunitySupport" class="venn__part" data-venn-words>
+          <text class="st11" transform="translate(894.32 408.32)"><tspan x="0" y="0">Community</tspan><tspan x="25.22" y="34.59">Support</tspan></text>
+        </g>
+        <g id="PersonalWellness" class="venn__part" data-venn-words>
+          <text class="st11" transform="translate(405.05 408.32)"><tspan x="0" y="0">Personal</tspan><tspan x="-1.15" y="34.59">Wellness</tspan></text>
+        </g>
+
+        <g id="IconPeople" class="venn__part">
+          <g>
+            <g><circle class="st2" cx="976.16" cy="337.43" r="8.47"/><path class="st2" d="M960.07,372.92v-7.89c0-8.89,7.2-16.09,16.09-16.09s16.09,7.2,16.09,16.09v7.89"/></g>
+            <g><circle class="st2" cx="953.98" cy="347.46" r="6.08"/><path class="st2" d="M942.44,372.92v-5.66c0-6.38,5.17-11.54,11.54-11.54,2.85,0,5.47,1.04,7.48,2.75"/></g>
+            <g><circle class="st2" cx="996.18" cy="347.46" r="6.08"/><path class="st2" d="M990.29,357.32c1.72-1.02,3.74-1.61,5.88-1.61,6.38,0,11.54,5.17,11.54,11.54v5.66"/></g>
+          </g>
+        </g>
+        <g id="IconSprout" class="venn__part">
+          <g>
+            <path class="st2" d="M490.75,345.99c-4.57,4.97-10.9,7.34-17.15,7.04-.82-6.2,1.02-12.71,5.58-17.68,4.57-4.97,10.9-7.34,17.15-7.04.82,6.2-1.02,12.71-5.58,17.68Z"/>
+            <path class="st2" d="M484.97,339.32s-16.4,11.85-20.09,38.64"/>
+            <path class="st2" d="M447.64,360.79c3.78,4.11,9.01,6.08,14.17,5.83.68-5.14-.84-10.53-4.62-14.64-3.78-4.11-9.01-6.08-14.17-5.83-.67,5.14.84,10.53,4.62,14.64Z"/>
+            <path class="st2" d="M453.26,355.62s9.48,6.86,11.62,22.35"/>
+          </g>
+        </g>
+      </svg>
+
+      <!-- Phone only; display:none from 721px up. The diagram's copy lives in
+           artboard units inside the SVG, so it scales with the container and
+           lands at 5.15px on a 375px screen. Below 721 the SVG is reduced to
+           its symbol — circles, gradients, petal — and the copy is set here
+           instead, on the page's own type scale.
+
+           aria-hidden because the <svg role="img"> already carries all three
+           lockups in its aria-label and that label is unaffected by hiding the
+           text visually. Without this a screen reader would hear it twice. -->
+      <ul class="venn__stack" aria-hidden="true">
+        <li class="venn__lock">
+          <h3 class="venn__lock-t">Personal Wellness</h3>
+          <p class="venn__lock-s">Health · Balance · Growth</p>
+        </li>
+        <li class="venn__lock">
+          <h3 class="venn__lock-t">Community Support</h3>
+          <p class="venn__lock-s">Connection · Guidance · Belonging</p>
+        </li>
+        <li class="venn__lock">
+          <h3 class="venn__lock-t">The Single Petal</h3>
+          <p class="venn__lock-s">The individual nurtured by wellness and community</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="petal-story" id="story" data-nav-theme="light">
+    <div class="container petal-story__grid">
+      <div class="petal-story__copy reveal">
+        <p class="eyebrow eyebrow--green">
+          The Single Petal
+          <svg class="petal" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-petal"/></svg>
+        </p>
+
+        <h2 class="h2" data-blur-words>One Journey can<br>inspire many.</h2>
+
+        <p class="prose">
+          The single petal represents the individual—supported through wellness,
+          connected through community, and growing into something bigger.
+        </p>
+
+        <p class="pull-quote">
+          From one bloom to many.<br>
+          From one journey to community.
+        </p>
+      </div>
+
+      <figure class="petal-story__figure reveal" data-delay="1">
+        <!-- Art-directed, not just resized. The frame changes orientation
+             across the breakpoints — 0.86 portrait on desktop, 1.21 landscape
+             at tablet, 0.90 at phone — and object-fit can only ever crop to
+             fill, so one full-length crop cannot serve all three: at tablet it
+             lost 72px off the heads and 117px off the feet. The tall crop
+             keeps the four of them head to toe where the frame is portrait;
+             the wide crop moves in to thigh-up where it is not. Both are cut
+             from the same source by tools/crop-image.swift, which also keeps
+             each file to the pixels that are actually shown. -->
+        <picture>
+          <source media="(min-width: 721px) and (max-width: 1024px)"
+                  srcset="assets/img/community-park-wide.jpg"
+                  width="893" height="847">
+          <img data-parallax="45" src="assets/img/community-park.jpg"
+               alt="Four women walking together across a park lawn, laughing and holding drinks"
+               width="798" height="1409" loading="lazy">
+        </picture>
+      </figure>
+    </div>
+  </section>
+
+  <!-- =============================== mosaic =============================== -->
+  </div>
+
+  <section class="mosaic" id="gallery" aria-label="Life at AYRA" data-nav-theme="light">
+    <div class="container">
+      <div class="mosaic__grid" data-parallax="20">
+
+        <figure class="tile tile--leaf reveal" data-delay="0">
+          <img src="assets/img/leaf.jpg" alt="An olive branch casting a soft shadow on a warm wall" width="800" height="450" loading="lazy">
+        </figure>
+
+        <figure class="tile tile--craft tile--caption-top reveal" data-delay="1">
+          <img src="assets/img/craft.jpg" alt="Hands whisking matcha in a ceramic bowl on a wooden tray" width="1200" height="675" loading="lazy">
+          <figcaption>Opportunities built through purpose, support, and connection.</figcaption>
+        </figure>
+
+        <figure class="tile tile--still reveal" data-delay="2">
+          <img src="assets/img/still-life.jpg" alt="A ceramic vase with greenery beside a notebook and pen" width="800" height="450" loading="lazy">
+        </figure>
+
+        <figure class="tile tile--walk reveal" data-delay="3">
+          <img src="assets/img/walk.jpg" alt="Four women walking a trail together at golden hour" width="800" height="450" loading="lazy">
+        </figure>
+
+        <figure class="tile tile--reset reveal" data-delay="4">
+          <img src="assets/img/reset.jpg" alt="A woman with her eyes closed, face turned toward an open sky" width="1200" height="675" loading="lazy">
+          <figcaption>Space to reset, reconnect, and grow.</figcaption>
+        </figure>
+
+        <figure class="tile tile--stones reveal" data-delay="0">
+          <img src="assets/img/stones.jpg" alt="Balanced stones stacked on a pale salt slab" width="1000" height="1000" loading="lazy">
+          <figcaption>Simple choices. Better everyday living.</figcaption>
+        </figure>
+
+        <figure class="tile tile--vista reveal" data-delay="1">
+          <img src="assets/img/vista.jpg" alt="A woman looking out over layered hills at sunrise" width="1000" height="562" loading="lazy">
+        </figure>
+
+        <figure class="tile tile--community reveal" data-delay="2">
+          <img src="assets/img/community.jpg" alt="Women gathered together in a bright, plant-filled room" width="1500" height="880" loading="lazy">
+          <figcaption>Meaningful gatherings that make wellness feel human.</figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================= cta ================================ -->
+  <section class="cta" id="join" data-nav-theme="light">
+    <!-- Two registered halves of the same frame: JoinAyra_BG has the landscape
+         with the subject removed, JoinAyra_Subject has the cutout on
+         transparency, both on the same 1672x1771 canvas. Given identical
+         sizing and position they reassemble the original photograph exactly —
+         which is what lets them drift at different rates without the
+         composition needing to be re-framed. -->
+    <div class="cta__bg" data-parallax="45" aria-hidden="true"></div>
+    <div class="cta__subject" data-parallax="80" aria-hidden="true"></div>
+
+    <div class="container cta__inner">
+      <div class="cta__card reveal">
+        <p class="eyebrow eyebrow--dark">Join Ayra</p>
+
+        <h2 class="h2" data-blur-words>Grow Well.<br>Grow Together.</h2>
+
+        <p class="prose">
+          Support for better health, sustainable habits, balance, and personal growth.
+        </p>
+
+        <!-- One pill, two controls. The form itself carries the fill and the
+             radius; the input and the button are both transparent inside it,
+             so there is no seam between them to hide. -->
+        <form class="signup" id="signup" novalidate>
+          <label class="visually-hidden" for="email">Email address</label>
+          <input class="signup__input" id="email" name="email" type="email"
+                 inputmode="email" autocomplete="email"
+                 placeholder="Enter your email address"
+                 aria-describedby="signup-msg" required>
+
+          <button class="signup__submit" type="submit">Join</button>
+        </form>
+
+        <p class="signup__msg" id="signup-msg" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+</div><!-- /.page-body -->
+
+<!-- =============================== footer ===============================
+     Outside .page-body on purpose: that is what lets the sticky nav scroll
+     away as this comes into view.
+     ====================================================================== -->
+<footer class="footer" id="contact" data-nav-theme="light">
+  <!-- Closing echo of the hero. No parallax: the footer is an ordinary block,
+       so there is nothing for a drift to be measured against. -->
+  <div class="footer__bg" aria-hidden="true">
+    <video class="footer__video" autoplay muted loop playsinline
+           preload="metadata" poster="assets/video/hero-poster.jpg"
+           tabindex="-1" disablepictureinpicture
+           data-src-hd="assets/video/hero.mp4">
+      <source src="assets/video/hero-mobile.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- One 2x3 grid rather than two independent flex columns: the middle row
+       (Social / Menu) only shares a baseline if both columns are on the same
+       grid, and the block above it differs in height (1 line vs 3). Row 2 is
+       the flexing one, so rows 1 and 3 stay pinned top and bottom. -->
+  <div class="container footer__grid">
+
+    <div class="footer__block footer__block--contact">
+      <p class="footer__label">Contact:</p>
+      <p class="footer__contact">
+        <a href="mailto:hello@ayra.com">hello@ayra.com</a>
+        <span class="footer__sep" aria-hidden="true">/</span>
+        <a href="tel:+971588752352">+971588752352</a>
+      </p>
+    </div>
+
+    <div class="footer__block footer__block--address">
+      <p class="footer__label">Address:</p>
+      <address class="footer__address">
+        Amber Gem Tower, Mezannine Floor,<br>
+        Sheikh Khalifa Street,<br>
+        Ajman United Arab Emirates
+      </address>
+    </div>
+
+    <div class="footer__block footer__block--social">
+      <p class="footer__label">Social:</p>
+      <!-- Placeholder hrefs — swap in the real profile URLs and add
+           target="_blank" rel="noopener" when they exist. -->
+      <nav class="footer__links" aria-label="Social">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Tiktok</a>
+      </nav>
+    </div>
+
+    <div class="footer__block footer__block--menu">
+      <p class="footer__label">Menu:</p>
+      <nav class="footer__links" aria-label="Footer">
+        <a href="#about">About</a>
+        <a href="#philosophy">Philosophy</a>
+        <a href="#story">The Single Petal</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#join">Join US</a>
+      </nav>
+    </div>
+
+    <a class="footer__brand" href="#top" aria-label="AYRA — back to top">
+      <img src="assets/brand/AYRA_Logo_Colored.svg" alt="" width="850" height="400">
+    </a>
+
+    <p class="footer__meta">
+      <span class="footer__tagline">Wellness, Connected</span>
+      <span class="footer__legal">&copy; 2026 AYRA Co.</span>
+    </p>
+
+  </div>
+</footer>
+
+<!-- Lenis powers the eased scrolling. Deferred and loaded first so it is
+     defined before main.js runs; if the CDN fails, main.js detects the missing
+     global and the page falls back to native scrolling with nothing else lost. -->
+<script src="https://unpkg.com/lenis@1.3.25/dist/lenis.min.js" defer></script>
+<script src="js/main.js" defer></script>
+</body>
+</html>

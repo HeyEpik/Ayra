@@ -1,0 +1,2326 @@
+/* ==========================================================================
+   AYRA — Wellness, Connected.
+   Landing page styles. Built from the Illustrator layout + Identity Guideline.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* --- Brand palette (exact values from the Identity Guideline) --- */
+  --rooted-earth:   #824226;  /* Grounding, Authenticity, Stability */
+  --vitality-glow:  #ED8754;  /* Energy, Warmth, Optimism          */
+  --golden-balance: #F4D5A4;  /* Care, Quality, Aspiration         */
+  --calm-ivory:     #F7F3E8;  /* Calm, Clarity, Openness           */
+  --living-green:   #6E891B;  /* Renewal, Wellness, Growth         */
+
+  /* --- Text-safe variants -------------------------------------------------
+     The five brand colours above are used for every fill, surface and large
+     display element. These darker cousins are used ONLY for small text, so
+     body copy and labels clear WCAG AA (4.5:1) on warm backgrounds.
+     To go back to the literal brand hex for text, point these at the
+     brand tokens above — nothing else needs to change.
+     ---------------------------------------------------------------------- */
+  --ink-heading: var(--rooted-earth);
+  --ink-body:    #7E4C2E;   /* body copy on gold / peach   ~5.0:1 */
+  --ink-glow:    #C85F2C;   /* large orange display text   ~3.7:1 */
+  --ink-glow-sm: #A94E1E;   /* small orange labels         ~4.9:1 */
+  --ink-green:   #4E6112;   /* small green labels          ~4.9:1 */
+  --ink-dark:    #52301B;   /* on light glass              */
+
+  /* --- Surfaces --- */
+  --cream:       #FDF7EC;
+  --cream-deep:  #FBEFD8;
+  --gold-soft:   #F7E3B9;
+  --sage-soft:   #DCE3C0;
+  --peach:       #F5CFA0;
+
+  /* --- Typography ---------------------------------------------------------
+     Brand fonts: Publico Text Semibold (headlines) + Gotham Book (body).
+     Both are commercially licensed, so the web build ships close free
+     stand-ins. To swap in the real fonts: add @font-face blocks for
+     "Publico Text" and "Gotham", then put them first in these two stacks.
+     ---------------------------------------------------------------------- */
+  --font-display: "Publico Text", "Source Serif 4", "Iowan Old Style",
+                  Georgia, "Times New Roman", serif;
+  --font-body:    "Gotham", "Montserrat", -apple-system, BlinkMacSystemFont,
+                  "Segoe UI", Helvetica, Arial, sans-serif;
+
+  /* --- Scale --- */
+  --step--1: clamp(0.78rem, 0.75rem + 0.15vw, 0.86rem);
+  --step-0:  clamp(0.92rem, 0.88rem + 0.20vw, 1.02rem);
+  --step-1:  clamp(1.05rem, 0.98rem + 0.35vw, 1.30rem);
+  --step-2:  clamp(1.45rem, 1.20rem + 1.10vw, 2.00rem);
+  --step-3:  clamp(1.95rem, 1.45rem + 2.20vw, 3.35rem);
+
+  /* Body copy that has to carry a section on its own, rather than support a
+     heading: the About card's paragraph and the Single Petal's. Sits between
+     --step-1 and --step-2. One token so the two cannot drift apart. */
+  --step-lead: clamp(1rem, 0.72rem + 0.72vw, 1.45rem);
+
+  /* --- Space --- */
+  --space-xs:  0.5rem;
+  --space-sm:  1rem;
+  --space-md:  1.75rem;
+  --space-lg:  3rem;
+
+  /* --- Radius --- */
+  --r-sm:  14px;
+  --r-md:  20px;
+  --r-lg:  32px;
+  --r-xl:  40px;
+  --r-pill: 999px;
+
+  /* --- Motion --- */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur:      280ms;
+  /* Long enough that the pillar gradients read as travelling rather than
+     snapping. Paired with --dur on the ink, so colour lands before the
+     sweep finishes rather than racing it. */
+  --sweep:    760ms;
+
+  /* --- Layout -------------------------------------------------------------
+     One fluid margin, applied as padding on all four sides of every top-level
+     section. Content fills the section minus this margin and keeps scaling
+     with the viewport until it meets --section-max below. Long text lines are
+     still handled per element by a measure, not by the wrapper.
+
+     vmin, so the margin tracks the *smaller* viewport dimension. A viewport-
+     width unit would keep growing on a short, wide window and eat the height
+     it can least afford; vmin holds the gutter proportionate to whichever
+     edge is tightest. If it ever needs bounds at extremes:
+     clamp(16px, 5vmin, 100px).
+     ---------------------------------------------------------------------- */
+  --section-margin: 3.5vmin;
+
+  /* Upper bound on the composition. The fluid margin above still governs
+     everything up to this width — the cap only engages once the viewport is
+     wide enough that filling it edge to edge stops reading as a layout and
+     starts reading as sprawl. One value for every section, so they all align
+     on the same two vertical lines rather than each finding its own edge.
+
+     The footer opts out — it is the one full-bleed section, so it keeps the
+     fluid margin alone and runs to the viewport edge. */
+  --section-max: 2200px;
+
+  /* Nav height. The 44px link tap target is the floor here — at 56px the bar
+     leaves 6px around each link box and ~21px from bar edge to text cap. */
+  --nav-h:          56px;
+
+  /* Lifts the hero lockup off dead-centre. Applied as extra padding-bottom on
+     the stage, which is centring its content — so the group rises by half of
+     whatever is added, hence the x2. */
+  --hero-lift:      32px;
+
+  /* Every top-level section fills the viewport and centres its content.
+     dvh (not vh) so the mobile URL bar collapsing doesn't leave a gap.
+     min-height, never height — long content grows instead of clipping. */
+  --section-min: 100dvh;
+
+  /* Parallax travel for the slow background layers. Each layer's own
+     data-parallax attribute sets its amplitude in px; this is the headroom
+     the clipped ones are oversized by, so travelling never exposes an edge.
+     Keep it comfortably above the largest amplitude in use. That is 80 — the
+     Join section's cutout figure. Undersize this and the layer's own travel
+     overruns its headroom and exposes an edge at the extremes of a crossing,
+     which is a hard visual break rather than a subtle one. */
+  --px-room: 112px;
+}
+
+/* One shared rule for every slow layer. None of these elements carry another
+   transform, so there is nothing to compose against and nothing to fight. */
+[data-parallax] {
+  transform: translate3d(0, var(--px-shift, 0px), 0);
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* Default for any anchor that lands on ordinary content, so the fixed bar
+     never covers it. Every section target cancels it — see below. */
+  scroll-padding-top: var(--nav-h);
+}
+
+/* The nav-height offset is wrong for these. They are sized to fill the
+   viewport exactly, so landing one --nav-h down leaves a strip of the previous
+   section along the top and pushes the same amount of this one off the bottom
+   — which reads as two sections bleeding into each other, at every nav link.
+   Nothing needs clearing anyway: the bar auto-hides on the way down, and it is
+   translucent over the top of the section it lands on.
+
+   Same mechanism .intro__anchor already uses: a negative scroll-margin shrinks
+   the target's scroll box by exactly what scroll-padding insets it. */
+.intro,
+.philosophy,
+.petal-story,
+.mosaic,
+.cta,
+.footer {
+  scroll-margin-top: calc(-1 * var(--nav-h));
+}
+
+/* The gentle settle over Join Us and Contact is in main.js, not here.
+
+   CSS scroll-snap cannot do it: it exposes no duration and no easing, and with
+   Lenis driving the real scroll position every frame the browser's own snap
+   animation gets overwritten as it runs, so it lands as a jump rather than a
+   glide. Routing it through the same Lenis instance is what makes it a drift.
+   See module 11. */
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink-body);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: 0.015em;
+  -webkit-font-smoothing: antialiased;
+  /* clip, not hidden: `hidden` turns body into a scroll container, which
+     breaks the sticky nav. `clip` does the same clipping with no scrollport. */
+  overflow-x: clip;
+}
+
+img, svg, video { display: block; max-width: 100%; }
+img { height: auto; }
+
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 600; }
+p  { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+a { color: inherit; text-decoration: none; }
+
+button, input { font: inherit; color: inherit; }
+
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 3px solid var(--ink-glow-sm);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Anchor clicks hand keyboard focus to the target section (main.js stamps a
+   tabindex="-1" on it first), which is right for screen readers and wrong for
+   the ring above: these sections are full-bleed and taller than the viewport,
+   so three sides of the ring are off-screen and only the bottom edge shows —
+   a 3px Rooted-Earth rule straight across the page at the section join, which
+   reads as a seam rather than as focus. The elements are not interactive and
+   nothing is done to them once focused, so the ring carries no information.
+   Scoped to the programmatic -1 value: a real tabindex still rings normally. */
+:where(section, main, footer, article, aside)[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute; top: -100px; left: var(--section-margin); z-index: 200;
+  padding: 0.75rem 1.25rem;
+  background: var(--rooted-earth); color: #fff;
+  border-radius: var(--r-pill);
+  font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase;
+  transition: top var(--dur) var(--ease-out);
+}
+.skip-link:focus-visible { top: 14px; }
+
+/* The shared content box. The section's own padding is the only inset below
+   --section-max; past it this centres and holds. Every layout class that sits
+   alongside it (.petal-story__grid, .cta__inner, .footer__grid, .mosaic__grid)
+   inherits the cap by being inside it, so all sections share one edge. */
+.container {
+  width: 100%;
+  max-width: var(--section-max);
+  margin-inline: auto;
+}
+
+/* --- Wide screens --------------------------------------------------------
+   Nothing caps the layout, so on very large displays the only thing that needs
+   protecting is line length. Most copy already carries a tighter measure of
+   its own (.prose 46ch, .pillar__text 22ch) and is left alone — this is the
+   safety net for the elements that had none. Images and panels stay full-bleed
+   to the section margin, as intended.
+   ------------------------------------------------------------------------ */
+@media (min-width: 2200px) {
+  /* Element selector on purpose: any class-level measure is more specific and
+     still wins, so .prose keeps 46ch and .pillar__text keeps 22ch. This only
+     catches paragraphs that have no measure of their own.
+
+     Not applied to headings — `ch` scales with font size, so 65ch on 54px
+     display type works out past 2300px and would never constrain anything.
+     Headlines are kept in hand by their own line breaks instead. */
+  p { max-width: 65ch; }
+  .pull-quote { max-width: 45ch; }
+}
+
+/* --------------------------------------------------------------------------
+   3. Shared type
+   -------------------------------------------------------------------------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  margin: 0 0 var(--space-sm);
+  font-size: var(--step--1);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.eyebrow--glow  { color: var(--ink-glow-sm); }
+.eyebrow--green { color: var(--ink-green); }
+.eyebrow--dark  { color: var(--ink-dark); }
+
+.petal {
+  width: 0.95em; height: 0.95em;
+  fill: var(--vitality-glow);
+  transform: rotate(-12deg);
+  flex: none;
+}
+.petal--lg { width: 22px; height: 22px; margin-inline: auto; }
+
+.h2 {
+  color: var(--ink-heading);
+  font-size: var(--step-3);
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+}
+.h2--center { text-align: center; }
+.h2--light  { color: #fff; }
+
+.prose {
+  max-width: 46ch;
+  font-size: var(--step-0);
+  line-height: 1.85;
+}
+.prose--light { color: rgba(255, 255, 255, 0.92); }
+
+.pull-quote {
+  font-family: var(--font-display);
+  font-weight: 600;
+  /* --step-2, not --step-1. With the prose above it now on --step-lead, a
+     step-1 quote was *smaller* than the body copy it is meant to close — the
+     emphasis read backwards. */
+  font-size: var(--step-2);
+  line-height: 1.35;
+  color: var(--ink-heading);
+}
+
+.section-head {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   4. Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.85rem 2.4rem;
+  border: 0;
+  border-radius: var(--r-pill);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform var(--dur) var(--ease-out),
+              box-shadow var(--dur) var(--ease-out),
+              background-color var(--dur) var(--ease-out);
+}
+.btn--gold {
+  background: var(--golden-balance);
+  color: var(--ink-heading);
+  box-shadow: 0 10px 26px -14px rgba(130, 66, 38, 0.55);
+}
+.btn--cream {
+  background: var(--calm-ivory);
+  color: var(--ink-heading);
+}
+.btn:hover  { transform: translateY(-2px); box-shadow: 0 16px 30px -16px rgba(130, 66, 38, 0.6); }
+.btn:active { transform: translateY(0); }
+
+/* --------------------------------------------------------------------------
+   5. Nav
+   -------------------------------------------------------------------------- */
+/* Fixed. Visibility is driven entirely by scroll direction in main.js
+   (.nav--hidden), which is what replaced the old sticky-inside-.page-body
+   containment — so .page-body no longer has a job beyond grouping, and main no
+   longer needs a negative margin to undo the flow space sticky used to take.
+
+   The glass is unconditional now rather than tied to scrolling past the hero:
+   the bar carries it at every scroll position, and .nav--hidden fades the
+   whole element out. That is deliberately how the fill and the movement stay
+   in sync — one opacity drives the tint, the blur, the border and the shadow
+   along with the translate, so there is no way for the background to lag the
+   slide or land a frame apart from it. */
+.page-body { position: relative; }
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+
+  /* Calm Ivory at 60%. */
+  background-color: rgba(247, 243, 232, 0.60);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(130, 66, 38, 0.10);
+  box-shadow: 0 6px 24px -18px rgba(130, 66, 38, 0.55);
+
+  transition: transform 280ms var(--ease-out),
+              opacity   280ms var(--ease-out);
+  will-change: transform, opacity;
+}
+
+/* Scrolling down, or anywhere in the footer. */
+.nav--hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Section-aware ink. Sections carry data-nav-theme; main.js mirrors whichever
+   one is behind the nav line onto these classes. */
+.nav--on-light { --nav-ink: var(--ink-heading); }
+.nav--on-dark  { --nav-ink: var(--calm-ivory); }
+
+.nav__inner {
+  /* Same inset as every section, so the wordmark lines up with their content. */
+  width: 100%;
+  padding-inline: var(--section-margin);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.nav__brand {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;   /* the wordmark is short — keep the tap target full size */
+  padding-inline: 2px;
+}
+.nav__mark {
+  width: clamp(56px, 5vw, 70px);
+  height: auto;
+  transition: opacity 300ms var(--ease-out);
+}
+/* The white mark sits exactly on top of the coloured one and cross-fades. */
+.nav__mark--light {
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  translate: 0 -50%;
+  opacity: 0;
+}
+.nav--on-dark .nav__mark--colour { opacity: 0; }
+.nav--on-dark .nav__mark--light  { opacity: 1; }
+
+/* Six links at 375px do not fit, and a hamburger was not asked for — so the
+   row scrolls horizontally on narrow screens rather than dropping any link. */
+.nav__menu {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2.2vw, 2.5rem);
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.nav__menu::-webkit-scrollbar { display: none; }
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  min-height: 44px;
+  color: var(--nav-ink, var(--ink-heading));
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition: color 300ms var(--ease-out);
+}
+.nav__link:hover { color: var(--ink-glow-sm); }
+
+/* --- burger ---------------------------------------------------------------
+   Hidden here and switched on in the 1024 block, rather than the reverse: the
+   inline row is the real navigation and the button is the narrow-screen
+   stand-in, so the default stylesheet describes the desktop bar and the
+   breakpoint describes the departure from it.
+
+   The bars are spans, not a background image or a pseudo-element pair, because
+   all three have to be individually animatable — the outer two rotate into the
+   cross while the middle one fades, and that needs three boxes. */
+.nav__burger {
+  display: none;
+  /* 44px tap target around a 22px glyph: the padding is the target, the box is
+     the drawing. */
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-inline-end: -10px;   /* optically flush with the section inset */
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--nav-ink, var(--ink-heading));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav__burger-box {
+  position: relative;
+  display: block;
+  width: 22px;
+  /* 14 with 2px bars puts them at 0 / 6 / 12 — whole pixels. At 1.5px they
+     straddled a device pixel and rendered as soft, visibly uneven strokes. */
+  height: 14px;
+}
+
+.nav__burger-bar {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  /* currentColor, so the section-aware ink drives the glyph exactly as it
+     drives the links — one variable, no second colour to keep in step. */
+  background: currentColor;
+  transition: transform var(--dur) var(--ease-out),
+              opacity 160ms linear;
+}
+.nav__burger-bar:nth-child(1) { top: 0; }
+.nav__burger-bar:nth-child(2) { top: 50%; translate: 0 -50%; }
+.nav__burger-bar:nth-child(3) { bottom: 0; }
+
+/* Open: the outer bars travel to the centre line and cross; the middle one
+   goes. Rotating about the centre after translating means both strokes pivot
+   on the same point, so the X is symmetrical whatever the bar spacing is. */
+.nav__burger[aria-expanded="true"] .nav__burger-bar:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.nav__burger[aria-expanded="true"] .nav__burger-bar:nth-child(2) {
+  opacity: 0;
+}
+.nav__burger[aria-expanded="true"] .nav__burger-bar:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* --------------------------------------------------------------------------
+   6. Intro sequence  (hero + About, pinned)
+
+   One sticky stage over ~300vh. main.js derives a single progress value from
+   the section's position and writes it out as the custom properties below,
+   once per animation frame. Nothing here listens to the wheel and nothing is
+   scrolled programmatically — native scrolling is untouched.
+
+   The declared values are the END state, so with JS off (or reduced motion)
+   the stage renders as the finished About composition and nothing is lost.
+   -------------------------------------------------------------------------- */
+.intro {
+  --seq-cue-o:   0;      /* opening chrome: lede, button, scroll cue          */
+  --seq-mark-y:  0px;    /* wordmark lift                                     */
+  --seq-mark-o:  0;      /* wordmark + tagline opacity                        */
+  --seq-word-l:  0px;    /* tagline halves, travelled independently so both   */
+  --seq-word-r:  0px;    /* inner edges clear the panel by the same margin    */
+  --seq-word-y:  0px;
+  /* The morphing panel — the About card, so it fills the section the same way
+     every other block does: full width minus the margin. JS measures the stage
+     directly and matches this. */
+  /* Same cap as .container, applied by hand: the panel is positioned inside
+     the sticky stage rather than sitting in the content box. The height is
+     derived from the *capped* width so the card holds its ratio instead of
+     going letterbox once the cap engages. */
+  --seq-panel-w: min(calc(100% - 2 * var(--section-margin)), var(--section-max));
+  --seq-panel-h: min(78svh, calc(min(100vw - 2 * var(--section-margin),
+                                     var(--section-max)) * 0.556));
+  --seq-panel-r: var(--r-xl);
+  --seq-panel-s: 1;
+  --seq-panel-o: 1;
+  --seq-panel-y: 0px;
+  --seq-photo-w: 58%;    /* photo box inside the panel                        */
+  --seq-photo-h: 100%;
+  --seq-mask:    30%;    /* where the photo's soft edge reaches full opacity  */
+  --seq-copy-o:  1;      /* About column                                      */
+  --seq-copy-y:  0px;
+  --seq-copy-w:  min(58%, 62rem);
+
+  position: relative;
+
+  /* --seq-vh is the hero-to-card sequence. --about-vh used to buy scroll for a
+     second text state inside the card; that state is gone, so it is 0 — the
+     pin now releases the moment the sequence lands rather than holding a
+     static card for another 180vh. main.js reads both and remaps, so setting
+     it back above 0 restores a second phase without touching the timing of
+     the first. */
+  --seq-vh:   300;
+  --about-vh: 0;
+  height: calc((var(--seq-vh) + var(--about-vh)) * 1svh);
+}
+
+/* Deliberately svh, not the --section-min dvh the other sections use. This
+   stage is sticky for 300vh, and dvh changes size *during* that scroll as the
+   mobile URL bar collapses — which would change the sequence's travel distance
+   mid-flight and make the animation jump. svh is the stable unit here, so the
+   pin keeps the same height the whole way through. */
+.intro__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  /* Keeps the panel's per-frame resize from touching the rest of the page. */
+  contain: layout paint;
+}
+
+/* Sits exactly at the scroll offset where the pin releases. */
+.intro__anchor {
+  position: absolute;
+  left: 0;
+  top: calc(100% - 100svh);
+  width: 1px;
+  height: 1px;
+  scroll-margin-top: calc(-1 * var(--nav-h));
+}
+
+.intro__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  /* Shows through before the video paints, and fills any letterboxing. */
+  background: var(--cream);
+}
+
+.intro__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* The footage is already pale, so this is a light hold-down for text contrast
+   plus the fade into the gold of the section below. */
+.intro__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(253, 247, 236, 0.30) 0%,
+    rgba(253, 247, 236, 0.20) 32%,
+    rgba(250, 235, 206, 0.55) 76%,
+    var(--gold-soft) 100%);
+}
+
+.intro__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* Normal flow, centred as a column — the same composition the static hero
+     had. The sequence only ever transforms these, never re-lays them out. */
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(1rem, 2.2vw, 1.6rem);
+  padding: calc(var(--nav-h) + var(--section-margin))
+           var(--section-margin)
+           calc(var(--section-margin) + 2 * var(--hero-lift));
+  text-align: center;
+}
+
+/* --- state 1: wordmark, tagline, opening chrome --- */
+
+/* Proportions track the artboard: the wordmark is ~17% of the canvas and the
+   lede ~37%. */
+/* Wordmark and tagline both scaled +12% from where they were, in step so the
+   lockup's internal proportions are unchanged. */
+/* --- Load-in ---------------------------------------------------------------
+   The wordmark and the two tagline halves rise into place once, on mount.
+
+   Two choices here are load-bearing, and changing either breaks the scroll
+   sequence rather than just looking different:
+
+   1. It animates `translate`, NOT `transform`. Both of these elements already
+      carry a transform driven by the pin — translateY(var(--seq-mark-y)) on
+      the wordmark, translateX(var(--seq-word-*)) on the halves — and animating
+      `transform` would replace it for the animation's lifetime. `translate` is
+      an independent property that composes with `transform`, so the split and
+      the lift keep working underneath.
+
+   2. fill-mode is `backwards`, NOT `both`. Backwards applies the from-frame
+      during the delay, which is what stops the halves flashing before their
+      turn. `both` would additionally retain the to-frame *forever* — and a
+      CSS animation outranks everything below it in the cascade, so the
+      wordmark would be pinned at opacity 1 / translate 0 and could never fade
+      out or lift when the pin runs. With `backwards` the element hands control
+      straight back to `opacity: var(--seq-mark-o)` the moment it finishes.
+
+   The elements are already invisible before this runs — --seq-mark-o is
+   declared 0 and the sequence raises it — so there is no flash to guard
+   against on a slow connection. Nothing here depends on JS.
+   -------------------------------------------------------------------------- */
+@keyframes intro-rise {
+  from { opacity: 0; translate: 0 10px; }
+  to   { opacity: 1; translate: 0 0;    }
+}
+
+.intro__wordmark,
+.intro__word {
+  animation: intro-rise 480ms var(--ease-out) backwards;
+}
+.intro__word--l { animation-delay: 150ms; }
+.intro__word--r { animation-delay: 250ms; }   /* 100ms after the left half */
+
+.intro__wordmark {
+  width: clamp(188px, 19vw, 380px);
+  height: auto;
+  opacity: var(--seq-mark-o);
+  transform: translateY(var(--seq-mark-y));
+  will-change: transform, opacity;
+}
+
+.intro__tagline {
+  display: flex;
+  justify-content: center;
+  gap: 0.3em;
+  white-space: nowrap;
+  margin: -0.35rem 0 0;
+  opacity: var(--seq-mark-o);
+  transform: translateY(var(--seq-word-y));
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  /* --step-1 +12%, written out rather than bumping the token, which
+     .pull-quote also uses. */
+  font-size: clamp(1.18rem, 1.10rem + 0.39vw, 1.46rem);
+  line-height: 1.2;
+  letter-spacing: 0.005em;
+  color: var(--ink-glow);
+  will-change: transform, opacity;
+}
+.intro__word    { display: block; will-change: transform; }
+.intro__word--l { transform: translateX(calc(-1 * var(--seq-word-l))); }
+.intro__word--r { transform: translateX(var(--seq-word-r)); }
+
+/* Sits low in the stage rather than under the tagline, so the opening frame
+   stays as spare as the artboard: wordmark, tagline, and a quiet cue. */
+.intro__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(2rem, 5vh, 4rem);
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  opacity: var(--seq-cue-o);
+  color: var(--ink-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  will-change: opacity;
+}
+.intro__scroll-line {
+  width: 1px;
+  height: 46px;
+  background: linear-gradient(180deg, rgba(126, 76, 46, 0.55), rgba(126, 76, 46, 0));
+}
+
+/* --- states 2 + 3: the morphing panel --- */
+.intro__panel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  margin: 0;
+  width: var(--seq-panel-w);
+  height: var(--seq-panel-h);
+  border-radius: var(--seq-panel-r);
+  overflow: hidden;
+  opacity: var(--seq-panel-o);
+  transform: translate(-50%, calc(-50% + var(--seq-panel-y))) scale(var(--seq-panel-s));
+  background: linear-gradient(105deg,
+    var(--gold-soft) 0%, #F1E2BC 42%, var(--sage-soft) 100%);
+  box-shadow: 0 40px 70px -50px rgba(130, 66, 38, 0.55);
+  will-change: width, height, transform, opacity;
+}
+
+.intro__photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--seq-photo-w);
+  height: var(--seq-photo-h);
+  object-fit: cover;
+  /* The source is 16:9 against a roughly square photo box, so cover fills the
+     height and X picks the horizontal window: the sky on her left lands under
+     the mask fade, her face sits right of centre. Y only bites on the stacked
+     mobile card, where the box is wider than it is tall. */
+  object-position: 55% 30%;
+  /* Soft left edge, so the photo dissolves into the gradient as it settles.
+     On the final panel that fade lands exactly on the empty side of the
+     frame, which is why her face reads clean against the gradient. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 var(--seq-mask));
+          mask-image: linear-gradient(to right, transparent 0%, #000 var(--seq-mask));
+}
+
+.intro__copy {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: var(--seq-copy-w);
+  text-align: left;   /* the stage centres its column; the card does not */
+  padding: 0 clamp(0.5rem, 1vw, 1rem) 0 clamp(1.75rem, 4.6vw, 4.25rem);
+  display: grid;
+  gap: 0.35rem;
+  opacity: var(--seq-copy-o);
+  transform: translateY(calc(-50% + var(--seq-copy-y)));
+  will-change: transform, opacity;
+}
+/* Larger than the shared --step-0 body size. This paragraph carries the card
+   on its own — nothing restates it at display weight — and at 16px it read as
+   a caption under a 54px heading. */
+.intro__copy .prose {
+  margin-top: clamp(1.25rem, 3vw, 2.5rem);
+  max-width: 52ch;
+  font-size: var(--step-lead);
+  line-height: 1.7;
+}
+
+/* --------------------------------------------------------------------------
+   7b. Ambient span — hero echo behind Philosophy → Single Petal
+   -------------------------------------------------------------------------- */
+.ambient {
+  position: relative;
+
+  /* The whole gradient chain for the three sections it wraps, as ONE gradient
+     over ONE box. The sections used to carry a slice each, matched by hand at
+     every join (#F7E0B8 on both sides of both boundaries) — this makes that
+     matching unnecessary rather than merely correct, because there is no
+     longer a boundary to match across. Percentages of the container, so the
+     sections growing or shrinking cannot pull a stop out of alignment. */
+  background: linear-gradient(180deg,
+    var(--gold-soft)       0%,
+    #F7DFB4                4%,
+    var(--peach)          11%,
+    #F7E0B8               20%,
+    var(--golden-balance) 40%,
+    var(--golden-balance) 60%,
+    #F7E0B8               80%,
+    var(--cream-deep)     92%,
+    var(--cream)         100%);
+}
+
+/* One sticky film across the whole span. It sits above the container's
+   gradient and below every section, so the sections need only go transparent
+   and raise themselves a level — no per-section plumbing.
+
+   The negative margin that lifts the content over it is on the sections, NOT
+   on this element: a negative margin-bottom here would collapse its own margin
+   box, leave the containment condition permanently satisfied and pin it in
+   place forever. That is the exact bug that once stuck the nav over the
+   footer. */
+.ambient__bg {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: var(--ambient-o, 0.15);
+  /* Belt and braces on the bottom edge. The opacity fade above is timed to the
+     sticky release, but timing is a promise; this makes the edge a gradient
+     rather than a line whatever happens. At 15% over the gradient the softened
+     band is a two-point difference in RGB — invisible in its own right. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+}
+.ambient__bg video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Pulls the span back over the film's own 100svh, so it costs no layout. */
+.ambient > section:first-of-type { margin-top: -100svh; }
+
+.ambient > section {
+  position: relative;
+  z-index: 1;          /* above the film; their own backgrounds are gone */
+  background: none;
+}
+
+/* --------------------------------------------------------------------------
+   8. Philosophy
+   -------------------------------------------------------------------------- */
+.philosophy {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;            /* contains the parallaxing glow */
+  min-height: var(--section-min);
+  display: grid;
+  align-content: center;
+  padding: var(--section-margin);
+  /* Opens on --gold-soft because that is the exact colour sitting directly
+     above it: the intro backdrop's scrim ends on `var(--gold-soft) 100%`, and
+     the pin's bottom edge and this section's top edge are the same line once
+     the pin releases. The old #F7DFB4 was four or five points off it, which is
+     invisible as a colour and very visible as a hard horizontal seam. Anything
+     that changes that scrim's last stop has to change this one with it. */
+  background: linear-gradient(180deg,
+    var(--gold-soft) 0%, #F7DFB4 12%, var(--peach) 48%, #F7E0B8 100%);
+}
+
+/* Was a ::before; promoted to a real element so JS can move it. */
+.philosophy__glow {
+  position: absolute;
+  inset: calc(-1 * var(--px-room)) 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 46% at 0% 52%, rgba(237, 135, 84, 0.55), transparent 70%),
+    radial-gradient(46% 40% at 100% 18%, rgba(244, 213, 164, 0.85), transparent 72%);
+}
+
+.pillars {
+  display: grid;
+  /* auto-fit rather than repeat(3, 1fr): a 1fr track has min-width:auto, so
+     three of them cannot shrink below a card's min-content (~240px) and the
+     row overflows between roughly 720px and 1024px, where body's
+     overflow-x:hidden then clips the third card. auto-fit drops to two
+     columns, then one, as space runs out — and because there are only three
+     cards it still collapses back to exactly three at desktop widths. */
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+
+/* The card has two states: at rest the glow is weighted to the top with white
+   titles over it; lit, the weighting flips to the foot and the ink inverts
+   with it. Everything below is driven off these five, so the whole
+   interaction is retuned from one place.
+
+     NOTE the states are the reverse of what they were: the head-weighted card
+     with white titles is now the *hover*, and the foot-weighted one is what
+     the page shows by default.
+
+     That moves the one value that fails WCAG AA out of hover and into the
+     resting state. White body copy over the foot-weighted glow, at the height
+     the paragraph actually sits, measures 1.84:1 against a 4.5:1 bar — and a
+     touch device, which never hovers, only ever sees that state. Swap the
+     --pillar-body default below to var(--ink-dark) for 6.34:1. */
+.pillar {
+  --pillar-glow:      237, 135, 84;      /* Vitality Glow, as an rgb triplet */
+  --pillar-radius:    28px;
+  /* Held here rather than inline on the title, because the icon disc is sized
+     off it: the disc matches the two-line title's height exactly, so the two
+     read as one block instead of a heading with a badge beside it. */
+  --pillar-title-size: clamp(1.15rem, 0.23rem + 2.47vw, 2.9rem);
+  --pillar-title:      var(--ink-heading);
+  --pillar-body:       #fff;
+  --pillar-icon-fill:  rgba(237, 135, 84, 0.5);   /* Vitality Glow @ 50% */
+  /* Lifts white type off the glow. Only wanted when the title is white — a
+     brown glow behind brown ink is just a muddy halo. */
+  --pillar-title-glow: none;
+
+  position: relative;
+  isolation: isolate;          /* keeps the z-index:-1 layers inside the card */
+  display: flex;
+  flex-direction: column;
+  /* Centred, not space-between. At this height space-between strands the
+     title on the top edge and the body on the foot with a void between them;
+     the reference groups them, with the breathing room outside. */
+  justify-content: center;
+  gap: clamp(2.5rem, 5.5vw, 5rem);
+  /* Narrow layouts (stacked or two-up) keep a plain floor. */
+  min-height: clamp(360px, 42vw, 520px);
+  padding: clamp(1.6rem, 2.6vw, 2.35rem);
+  border-radius: var(--pillar-radius);
+  transition: transform var(--dur) var(--ease-out),
+              /* Slower than the transform. A 60px-blur glow snapping in over
+                 280ms reads as a flicker; at 420ms it blooms, and it lands
+                 between the ink (--dur) and the gradient sweep (--sweep)
+                 rather than racing either. */
+              box-shadow 420ms var(--ease-out);
+}
+
+/* Two layers rather than one animated value: background-image does not
+   interpolate, so a gradient cannot be transitioned to another gradient. The
+   lit one sits on top at opacity 0 and is cross-faded in.
+
+   Inset by -1px so they cover the border box — an absolutely positioned child
+   resolves against the padding box, and without it the border would ring the
+   card with bare section background. */
+.pillar::before,
+.pillar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  /* Each layer is painted at twice the card's height and slid across it, so
+     the colour genuinely travels on hover instead of just cross-fading. Each
+     gradient therefore packs its designed ramp into one half and leaves the
+     other half near-empty — whichever half is showing at rest is the ramp. */
+  background-size: 100% 200%;
+  background-repeat: no-repeat;
+  transition: opacity var(--sweep) var(--ease-out),
+              background-position var(--sweep) var(--ease-out);
+}
+
+/* Resting layer: foot-weighted. Ramp lives in the bottom half, parked there. */
+.pillar::before {
+  background-image: linear-gradient(180deg,
+    rgba(var(--pillar-glow), 0.02) 0%,
+    rgba(var(--pillar-glow), 0.02) 50%,
+    rgba(var(--pillar-glow), 0.36) 76%,
+    rgba(var(--pillar-glow), 0.86) 100%);
+  background-position: 0% 100%;
+}
+
+/* Hover layer: head-weighted. Ramp in the top half, parked out of frame below
+   until the sweep brings it up. */
+.pillar::after {
+  opacity: 0;
+  background-image: linear-gradient(180deg,
+    rgba(var(--pillar-glow), 0.72) 0%,
+    rgba(var(--pillar-glow), 0.34) 23%,
+    rgba(var(--pillar-glow), 0.02) 50%,
+    rgba(var(--pillar-glow), 0.02) 100%);
+  background-position: 0% 100%;
+}
+
+/* hover: hover, so a touch device doesn't strand a card in the lit state
+   after a tap — there is no pointer to move away and un-hover it. */
+/* The entrance and the hover share one element, and `.js .reveal` (0,2,0)
+   outranks `.pillar` (0,1,0) — the shorthand there replaces the whole
+   transition list, so box-shadow was left with none at all and the glow
+   snapped. This restates the entrance and adds box-shadow alongside it with no
+   delay of its own. Per-property transition-delay is what keeps the stagger
+   off the glow.
+
+   The pillars also take a longer stagger and more travel than the page's
+   shared reveal. At the default 30px / 90ms the three cards overlapped almost
+   completely against a 700ms duration — measured: card 1 starting at ~100ms,
+   card 3 at ~280ms — so it read as one movement with a slight lean rather than
+   three cards arriving in turn. 170ms apart clears real daylight between them,
+   and 64px is enough travel to read on a card this tall.
+
+   (var(--d) - 1) so the *first* card starts immediately and the stagger is
+   time between cards, not a wait before the first one. The default of 1 makes
+   that 0s for anything that somehow lacks data-delay. */
+.js .pillar.reveal {
+  transform: translateY(64px);
+  transition: opacity    700ms var(--ease-out),
+              transform  700ms var(--ease-out),
+              box-shadow 420ms var(--ease-out);
+  transition-delay: calc((var(--d, 1) - 1) * 170ms),
+                    calc((var(--d, 1) - 1) * 170ms),
+                    0s;
+}
+
+@media (hover: hover) {
+  .pillar:hover {
+    --pillar-title:      #fff;
+    --pillar-body:       var(--ink-body);
+    --pillar-icon-fill:  rgba(244, 213, 164, 0.25);  /* Golden Balance @ 25% */
+    --pillar-title-glow: 0 1px 12px rgba(130, 66, 38, 0.22);
+    /* No lift. transform is owned by the entrance above at 700ms with a
+       per-card stagger, so a hover translate inherits that timing and drags
+       behind the pointer. The glow carries the affordance on its own.
+
+       Vitality Glow rather than the brown depth shadow it had: soft and wide,
+       negative spread so there is no hard edge where it meets the card. Rest
+       keeps no shadow at all, so the glow is purely a hover affordance. */
+    box-shadow: 0 40px 60px -10px rgba(237, 135, 84, 0.35);
+  }
+  /* Both layers sweep in the same direction — the resting ramp travels up and
+     out of frame as the hover ramp arrives behind it. The resting layer also
+     fades, so the two never composite into a doubled-up middle. */
+  .pillar:hover::before { background-position: 0% 0%; opacity: 0; }
+  .pillar:hover::after  { background-position: 0% 0%; opacity: 1; }
+}
+
+.pillar__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.pillar__title {
+  /* The custom property is what changes on hover; the transition is on
+     `color` itself, which is what actually interpolates. */
+  color: var(--pillar-title);
+  transition: color var(--dur) var(--ease-out);
+  /* Off the shared scale on purpose. The card is 80% taller than it was, and
+     --step-2 (32px capped) left the type marooned in it; these land on the
+     reference's proportions — the title runs ~38% of the card's width, the
+     body's first line ~75%. Verified against both at 1280, 1600 and 2200. */
+  font-size: var(--pillar-title-size);
+  line-height: 1.18;
+  text-shadow: var(--pillar-title-glow);
+}
+
+.pillar__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  /* 2 lines x 1.18 line-height = the exact height of the title beside it. Its
+     own font-size is set to the title's so this em maths resolves locally. */
+  font-size: var(--pillar-title-size);
+  width: 2.36em;
+  height: 2.36em;
+  /* background-color, not the shorthand — the shorthand is not interpolable. */
+  background-color: var(--pillar-icon-fill);
+  color: #fff;
+  transition: background-color var(--dur) var(--ease-out);
+}
+/* Full size, not the old 46%. The glyphs' viewBox is the 78.49x80 canvas the
+   source files' own disc filled, so mapping it onto this disc 1:1 reproduces
+   the art at the scale and position it was drawn at. The visible line work
+   still lands around 60% of the disc — that padding is inside the artwork. */
+.pillar__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pillar__text {
+  /* 18ch at this size is the measure that reproduces the reference's line
+     breaks exactly — "…better health," / "sustainable habits," / "balance,
+     and personal" / "growth." Held in ch, not px, so the wrap survives the
+     font scaling down with the viewport. */
+  max-width: 19ch;
+  font-size: clamp(1rem, 0.62rem + 1.0vw, 1.625rem);
+  line-height: 1.6;
+  color: var(--pillar-body);
+  transition: color var(--dur) var(--ease-out);
+}
+
+/* Desktop: near-square rather than a tall column. aspect-ratio derives the
+   height from the grid track's width, so the cards stay square-ish at every
+   width instead of being pinned to one px ramp — and because the width here is
+   definite (a grid column) the ratio can only ever run one way, unlike the
+   max-height cases elsewhere in this file.
+
+   min-height gives way to it; the automatic minimum size still lets a card
+   grow if its own content ever needs more than the ratio allows. */
+@media (min-width: 1025px) {
+  .pillar {
+    min-height: 0;
+    aspect-ratio: 1 / 1.05;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8b. Venn diagram — pinned sequence
+   -------------------------------------------------------------------------- */
+.venn {
+  position: relative;
+  /* The wrapper is the scroll runway; .venn__pin is the viewport-sized stage
+     that sticks inside it. svh, not dvh — the same reason .intro__pin uses it:
+     a dvh pin resizes mid-scroll as the mobile URL bar collapses, which makes
+     the progress value jump. In svh the runway is 2 viewports of travel at
+     every width, so the sequence takes the same amount of scrolling on a phone
+     as on a desktop. */
+  --venn-vh: 300;
+  height: calc(var(--venn-vh) * 1svh);
+}
+
+.venn__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  /* clip, not hidden: `hidden` would make this a scroll container and break
+     its own stickiness. This contains the ambient layer's parallax headroom,
+     which is oversized past the stage on purpose. */
+  overflow: clip;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--nav-h) + var(--section-margin)) var(--section-margin)
+           var(--section-margin);
+}
+
+/* Phone only — see the 720 block, where the diagram becomes a symbol and this
+   takes over its copy. */
+.venn__stack { display: none; }
+
+.venn__svg {
+  width: 100%;
+  max-width: var(--section-max);
+  /* Height follows the cropped 976x613 viewBox, capped so a wide-but-short
+     window letterboxes by height instead of overrunning the stage.
+
+     Expressed against the viewport, not as `max-height: 100%`: this is a
+     centred grid item, so a percentage resolves against a grid row that is
+     itself sized from the item — cyclic, so the browser resolves it to `none`
+     and the cap silently does nothing. Measured that way it overran the stage
+     by 74px at 1440x900. This mirrors .venn__pin's own padding. */
+  max-height: calc(100svh - var(--nav-h) - 2 * var(--section-margin));
+  height: auto;
+  overflow: visible;   /* blur filters on the titles extend past the viewBox */
+}
+
+/* Every group in the diagram is sequenced, so every one carries this. */
+
+/* Hidden only when JS is present to animate them in — a no-JS visitor gets the
+   finished diagram, same contract as .reveal. */
+.js .venn__part { opacity: 0; }
+
+/* Under reduced motion the draw never runs, so the dasharray the module sets
+   must not leave the circles half-drawn. It only ever writes them when the
+   sequence is live, but this makes the resting state explicit either way. */
+.venn__svg [data-venn-draw] circle {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+  /* The export leaves these at the default 1 user unit, which scales with the
+     diagram — 1.40px at 1440 but 0.37px at 390, where the line is sub-pixel and
+     the draw cannot be seen at all. non-scaling-stroke reads the width in
+     screen pixels instead, so the animation is equally legible at every size.
+     1.4px is what the 1440 rendering already was, so nothing changes there.
+     The dash pattern stays in user units, so the draw itself is unaffected. */
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1.4px;
+}
+
+/* The title words settle upward as they sharpen. fill-box so the translate is
+   read in the element's own box; without it the words are still positioned by
+   x/y, but keeping the box local makes the transform independent of where the
+   glyphs sit on the canvas. */
+.venn__svg [data-venn-words] text {
+  transform-box: fill-box;
+}
+
+/* --- Exported styles from Ayra_VennDiagram.svg -----------------------------
+   Kept under their original .stN names and scoped here rather than left in an
+   inline <style>, which would leak these very generic class names into the
+   whole document. Two changes from the export: url() references point at the
+   prefixed gradient ids, and the two font stacks point at the page's tokens —
+   the file names Gotham and Publico Text directly, neither of which is loaded,
+   so as exported the labels fell back to the browser default.
+   -------------------------------------------------------------------------- */
+.venn__svg .st0,
+.venn__svg .st1,
+.venn__svg .st2,
+.venn__svg .st3,
+.venn__svg .st4 { fill: none; stroke-miterlimit: 10; }
+
+.venn__svg .st0 { stroke: #f7f3e8; stroke-width: 0.55px; }
+.venn__svg .st1 { stroke: #ed8754; stroke-width: 0.72px; }
+.venn__svg .st2 { stroke: #ed8754; stroke-width: 1.54px; }
+.venn__svg .st3 { stroke: url(#venn-grad-stroke-right); }
+.venn__svg .st4 { stroke: url(#venn-grad-stroke-left); }
+
+.venn__svg .st5,
+.venn__svg .st6  { fill: #f7f3e8; }
+.venn__svg .st11,
+.venn__svg .st12 { fill: #824226; }
+.venn__svg .st13 { fill: #ed8754; }
+.venn__svg .st9  { fill: url(#venn-grad-left); }
+.venn__svg .st10 { fill: url(#venn-grad-right); }
+
+.venn__svg .st5,
+.venn__svg .st7  { font-family: var(--font-body); font-size: 14.41px; }
+.venn__svg .st6,
+.venn__svg .st11 { font-family: var(--font-display); font-size: 28.83px; font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   9. Single Petal
+   -------------------------------------------------------------------------- */
+.petal-story {
+  min-height: var(--section-min);
+  display: grid;
+  align-content: center;
+  padding: var(--section-margin);
+}
+
+.petal-story__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+.petal-story__copy { display: grid; gap: 0.35rem; }
+/* Same lead size as the About card's paragraph — these two are the page's
+   only body copy that stands alone rather than under a heading. */
+.petal-story__copy .prose {
+  margin-top: clamp(1rem, 2vw, 1.6rem);
+  font-size: var(--step-lead);
+  line-height: 1.7;
+}
+.petal-story__copy .pull-quote { margin-top: clamp(2rem, 5vw, 4rem); }
+
+.petal-story__figure {
+  margin: 0;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  aspect-ratio: 6 / 7;
+  /* The portrait ratio makes this the one element whose height grows when the
+     column does — and a narrower --section-margin widens every column. Capping
+     it at the space the section actually has keeps the whole section inside
+     one viewport at any margin; the image's object-fit: cover absorbs the
+     crop, so nothing letterboxes.
+
+     width: 100% is load-bearing, not decoration. A grid item's stretch width
+     counts as automatic, so once max-height clamps the height the ratio runs
+     backwards and pulls the width in with it — the figure ends up narrower
+     than its own column and leaves a gap against the section's right edge.
+     An explicit width is definite, so the ratio can only derive height. */
+  width: 100%;
+  max-height: calc(100dvh - 2 * var(--section-margin));
+  box-shadow: 0 40px 70px -50px rgba(130, 66, 38, 0.6);
+}
+.petal-story__figure { position: relative; }
+/* Oversized by the parallax amplitude top and bottom, so travelling never
+   exposes an edge inside the rounded frame. */
+.petal-story__figure img {
+  position: absolute;
+  inset: calc(-1 * var(--px-room)) 0;
+  width: 100%;
+  height: calc(100% + 2 * var(--px-room));
+  object-fit: cover;
+  /* 30, not 50. The layer travels +/-45px inside this frame, and the group
+     very nearly fills it, so centring them leaves the heads 13px past the top
+     edge at one end of that travel. Biasing up spends the swing on the shoes
+     instead, which is the end that can afford to lose it. */
+  object-position: 50% 30%;
+}
+
+/* --------------------------------------------------------------------------
+   10. Mosaic
+   -------------------------------------------------------------------------- */
+.mosaic {
+  min-height: var(--section-min);
+  display: grid;
+  align-content: center;
+  overflow: hidden;            /* contains the parallaxing grid */
+  padding: var(--section-margin);
+  background: linear-gradient(180deg, var(--cream) 0%, #FBF2E1 62%, #FAEDD6 100%);
+}
+
+.mosaic__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.45fr 1fr 2.2fr;
+  grid-template-rows: repeat(4, 1fr);
+  gap: clamp(8px, 0.9vw, 14px);
+  /* Holds the artboard's ~1.84:1 ratio at any width. aspect-ratio derives the
+     height from whatever width the section gives it, so there is no viewport
+     maths to keep in sync. */
+  aspect-ratio: 1.84;
+  height: auto;
+  min-height: 430px;
+  /* The ratio derives height from width, so a wide, short window would push
+     the mosaic past the fold. Capping it lets the 1fr rows give the height
+     back; every tile is object-fit: cover, so they just crop. width: 100% for
+     the same reason as the Single Petal figure above — without it the clamped
+     height runs back through the ratio and narrows the grid. */
+  width: 100%;
+  max-height: calc(100dvh - 2 * var(--section-margin));
+}
+
+.tile--leaf      { grid-column: 1;   grid-row: 1 / 3; }
+.tile--craft     { grid-column: 2/4; grid-row: 1; }
+.tile--still     { grid-column: 4;   grid-row: 1; }
+.tile--walk      { grid-column: 2;   grid-row: 2; }
+.tile--reset     { grid-column: 3/5; grid-row: 2 / 4; }
+.tile--stones    { grid-column: 1/3; grid-row: 3 / 5; }
+.tile--vista     { grid-column: 3/5; grid-row: 4; }
+.tile--community { grid-column: 5;   grid-row: 1 / 5; }
+
+.tile {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: #EFE3CE;
+}
+.tile img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 600ms var(--ease-out);
+}
+.tile:hover img { transform: scale(1.035); }
+
+.tile figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.85rem, 1.05vw, 1.15rem);
+  line-height: 1.28;
+  text-shadow: 0 1px 14px rgba(52, 24, 10, 0.55);
+  background: linear-gradient(180deg, rgba(58, 27, 12, 0) 0%, rgba(58, 27, 12, 0.55) 100%);
+}
+.tile--caption-top figcaption {
+  inset: 0 0 auto 0;
+  background: linear-gradient(180deg, rgba(58, 27, 12, 0.55) 0%, rgba(58, 27, 12, 0) 100%);
+}
+
+.tile--leaf      img { object-position: 50% 42%; }
+.tile--stones    img { object-position: 50% 46%; }
+.tile--community img { object-position: 58% 42%; }
+.tile--reset     img { object-position: 50% 38%; }
+
+/* --------------------------------------------------------------------------
+   11. CTA
+   -------------------------------------------------------------------------- */
+.cta {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-items: center;
+  min-height: var(--section-min);
+  align-content: center;
+  padding: var(--section-margin);
+  overflow: hidden;
+}
+
+/* The landscape and the cutout figure are two layers of one photograph, drifting
+   at different rates. Everything about their framing is shared — same box, same
+   cover, same 42%/82% origin — because they are registered halves of a single
+   1672x1771 canvas: give them identical geometry and they reassemble the
+   original frame pixel for pixel, at every breakpoint, with no second set of
+   positioning values to keep in step.
+
+   Both ship as the supplied PNGs, at their original filenames. The landscape
+   is RGBA and 2.7 MB; it has no transparency that the composition needs, so
+   re-encoding it as JPEG takes it to ~229 KB for no visible loss. Doing that
+   is a one-line change here plus a `sips -s format jpeg` — worth it if the
+   Join section's weight ever matters.
+
+   Both are inset by the parallax headroom and clipped by .cta. Both sit at
+   z-index -1; the subject is later in the DOM, so it paints in front. */
+.cta__bg,
+.cta__subject {
+  position: absolute;
+  inset: calc(-1 * var(--px-room)) 0;
+  z-index: -1;
+  background-position: 42% 82%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.cta__bg      { background-image: url("../assets/img/JoinAyra_BG.png"); }
+
+/* The figure is scaled past `cover` so her head reaches the top of the copy.
+   Height-based, because that is the dimension being matched: her head sits at
+   58.75% of the source canvas, so the render height is what decides where it
+   lands. 207% of the layer box puts it level with the eyebrow at both desktop
+   widths (measured 29% of the section at 1440, 31% at 1728).
+
+   position-x moves with it. Enlarging the image also widens her, and at the
+   inherited 42% her silhouette would have closed to 4px of the pill at 1728;
+   53% pulls the crop back so the clearance holds. */
+.cta__subject {
+  background-image: url("../assets/img/JoinAyra_Subject.png");
+  background-size: auto var(--subject-scale, 207%);
+  background-position: 53% 82%;
+}
+
+/* The wash sits on the section, not on .cta__bg: on the background layer it
+   would have sat *under* the figure — she alone unshaded while the landscape
+   behind her darkened — and drifted at the background's rate instead of
+   staying put. As .cta::after it is the last of the z-index:-1 group, so it
+   covers both layers and moves with neither.
+
+   It used to darken toward the right, which is where the copy is. That existed
+   to hold white text on the photo; with dark ink it does the opposite, so the
+   ramp now *lifts* the copy side instead — Calm Ivory, feathered across more
+   than half the width so it has no edge of its own and never reads as a panel.
+   The left stays a light warm shade for depth behind the figure. */
+.cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Two layers. First listed paints on top.
+
+     Vertical — the head only. The mosaic above ends on #FAEDD6, so the top is
+     matched to the colour actually sitting against it and the photograph
+     arrives rather than starting on a line. Same reasoning as .philosophy
+     opening on --gold-soft; if that neighbour's last stop changes, this first
+     one changes with it.
+
+     Deliberately nothing at the foot. A veil there has to reach the footer's
+     opaque Golden Balance to be seamless, and at any lesser alpha it just
+     lightens the dark grass into a band that draws the eye to the very seam it
+     was meant to soften: at 0.52 the foot composited to rgb(163,138,96) against
+     the footer's rgb(244,213,164) — an RGB distance of 130, plainly visible.
+     Photo meeting gold outright reads as a section change; a half-blend reads
+     as a mistake.
+
+     The ramp clears the copy, which occupies 29.6%-70.4% of the section: it is
+     out by 26%, so the veil never settles on the type and the measured contrast
+     there is unchanged.
+
+     Horizontal — the copy side, unchanged: lifts it rather than darkening it. */
+  background:
+    linear-gradient(180deg,
+      #FAEDD6                      0%,
+      rgba(250, 237, 214, 0.68)    7%,
+      rgba(250, 237, 214, 0)      26%),
+    linear-gradient(90deg,
+      rgba(58, 27, 12, 0.12) 0%,
+      rgba(58, 27, 12, 0.04) 26%,
+      rgba(247, 243, 232, 0.10) 52%,
+      rgba(247, 243, 232, 0.26) 100%);
+}
+
+/* The copy sits in the open sky to her right — not pinned to the margin, not
+   over her. 20% off the inner edge lands the card's centre at ~58% of the
+   section, which is the middle of the target area at both desktop widths.
+
+   The pill's width is what actually binds here. It is the widest element in
+   the card, so it decides how far left the whole block can go: at 30rem it
+   overhangs her silhouette by 10px at 1440, at 24rem it clears by 38px. That
+   is why the pill is 24rem and not wider. */
+.cta__inner {
+  display: grid;
+  justify-items: end;
+  padding-inline-end: 20%;
+}
+
+/* No panel: no fill, no border, no blur, no shadow. The copy sits straight on
+   the photograph.
+
+   That is why the ink is the page's normal dark set rather than the white it
+   used to be. Sampled from join-bg.jpg, the band this copy occupies is
+   uniformly bright sky — #EBDCD0 to #FEF7EA — where white measures 1.67:1 and
+   Rooted Earth measures 5.9–7.2:1. The frosted panel was what made white
+   readable; take the panel away and the ink has to invert with it. */
+.cta__card {
+  width: min(50%, 760px, 100%);
+  padding-block: clamp(1rem, 2vw, 1.75rem);
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+}
+.cta__card .prose {
+  margin-top: clamp(0.85rem, 1.6vw, 1.35rem);
+  max-width: 38ch;
+  /* One step deeper than the page's --ink-body. This paragraph is the only
+     prose on the site sitting on a photograph rather than a flat surface, and
+     the sky it crosses at narrow widths is a mid-tone (#888D99) where
+     --ink-body lands at 2.4:1. --ink-dark clears 4.5:1 there with a far
+     lighter wash than --ink-body would have needed — 0.35 rather than 0.65,
+     which is the difference between a haze and a flattened sky. */
+  color: var(--ink-dark);
+}
+
+/* --- signup form --- */
+/* The form IS the pill. The fill, the border and the radius all live here, and
+   both controls inside are transparent — which is why there is no seam to
+   hide between them. overflow:hidden keeps the button's own hover tint inside
+   the rounded corner. */
+.signup {
+  display: flex;
+  align-items: center;
+  width: min(100%, 24rem);
+  margin-top: clamp(1.5rem, 3vw, 2.4rem);
+  margin-inline: auto;          /* centred in the card at every width */
+  /* 54, not 48: the submit is now an inset key at 46px with a 4px margin top
+     and bottom, and the pill has to seat it. */
+  min-height: 54px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--r-pill);
+  background: var(--vitality-glow);
+  overflow: hidden;
+  transition: box-shadow var(--dur) var(--ease-out),
+              background-color var(--dur) var(--ease-out);
+}
+.signup:hover { background: #EE9265; }
+
+/* Error state is toggled on the form, not the input: the fill it needs to
+   change now belongs to the pill, and the input inside is transparent. */
+.signup.is-invalid {
+  background: #D8552B;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65);
+}
+.signup.is-invalid .signup__input { color: #fff; }
+.signup.is-invalid .signup__input::placeholder { color: rgba(255, 255, 255, 0.85); }
+/* The key keeps its own fill through the error state — it is already Cream on
+   Rooted Earth at 7.14:1, and forcing it white only flattened it against the
+   pill's error red. */
+
+.signup__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0.85rem 0.6rem 0.85rem 1.6rem;
+  border: 0;
+  background: none;
+  border-radius: 0;
+  color: #54301A;
+  /* 16px flat, not --step--1. Safari zooms the viewport whenever a focused
+     input computes under 16px, and --step--1 tops out at 13.76 — tapping the
+     field lurched the whole page at the exact moment of conversion. This is the
+     one place on the site where the type scale has to give way. */
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+.signup__input:focus { outline: none; }
+.signup:focus-within { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75); }
+/* Opaque, not 0.78. At that alpha it composited to rgb(118,67,39) on the
+   Vitality Glow pill — 3.15:1, under the 4.5 bar. Full strength reads 4.56:1. */
+.signup__input::placeholder { color: #54301A; opacity: 1; }
+
+/* An inset key, not bare text. With no fill of its own the label read as part
+   of the field rather than as a control — the darkest brand colour against the
+   warmest is the strongest separation the palette allows without restaging the
+   pill, and it takes the label from 4.56:1 to 7.14:1 on the way.
+
+   width is content-sized, not stretched: flex:none plus fit-content means it is
+   exactly its label plus padding. 46px tall inside the 54px pill keeps the tap
+   target above the 44px floor. */
+.signup__submit {
+  flex: none;
+  width: fit-content;
+  min-height: 46px;
+  margin: 4px 4px 4px 0;
+  display: grid;
+  place-items: center;
+  padding-inline: 1.35rem;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--rooted-earth);
+  /* Golden Balance rather than Cream: warmer against the Rooted Earth key, and
+     it ties the button to the burger sheet, which uses the same value. 5.35:1
+     on this fill — AA, and it holds through the error state too. */
+  color: #F3D4A3;
+  /* A single hairline of light along the top edge, so the key reads as raised
+     out of the pill rather than punched into it. */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease-out),
+              transform 140ms var(--ease-out);
+}
+.signup__submit:hover  { background: #6E361E; }
+.signup__submit:active { transform: translateY(1px); }
+
+/* Dark on the sky, not white. This message lands on the brightest part of the
+   photograph — pale ink over pale sky was the reason it could not be read at
+   all. The halo flips with it: a dark blur under white type lifted it off the
+   image, but under dark type it only smudges, so it becomes a light one that
+   keeps the text crisp if the parallax carries a darker patch beneath it. */
+.signup__msg {
+  min-height: 1.4rem;
+  margin-top: 0.85rem;
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+  color: #824327;
+  text-shadow: 0 1px 10px rgba(253, 247, 236, 0.75);
+}
+/* Still a distinct signal, still readable on the same sky: the pale peach that
+   worked against a dark scrim measured well under the bar out here. */
+.signup__msg[data-state="error"]   { color: var(--ink-glow-sm); }
+.signup__msg[data-state="success"] { display: inline-flex; align-items: center; gap: 0.5em; }
+.signup__msg svg { width: 1.05em; height: 1.05em; flex: none; }
+
+.signup.is-done { display: none; }
+
+/* --------------------------------------------------------------------------
+   12. Footer
+   -------------------------------------------------------------------------- */
+.footer {
+  /* One resting ink for everything the footer says, and one for the pointer.
+     The two brand hexes this replaced were the page's worst contrast — Vitality
+     Glow measured 1.86:1 and Living Green 2.83:1 against Golden Balance, both
+     well under the 4.5 bar. #824327 reads 5.36:1 at the footer's unbloomed
+     edge, which is its darkest surface and where most of the links sit.
+
+     The hover is the brand orange and does not clear that bar (1.86:1). It is
+     a pointer-only, transient state over text that is legible at rest, so it
+     reads as an affordance rather than as the colour the copy is set in — but
+     it is a deliberate exception, not an oversight. */
+  --footer-accent: #824327;   /* social + menu links        */
+  --footer-info:   #824327;   /* contact line, address      */
+  --footer-hover:  #eb8554;   /* pointer only, both of them */
+
+  position: relative;
+  isolation: isolate;         /* keeps the ambient layer out of the page's stack */
+  min-height: var(--section-min);
+  display: grid;              /* single child, stretched to full height */
+  padding: var(--section-margin);
+  /* Two layers: a soft bloom through the centre over the existing diagonal
+     wash. The bloom is Calm Ivory at low alpha rather than a new hue, so it
+     lifts the middle without introducing a colour the palette doesn't have.
+     Sized in percentages of the footer, so it stays centred at any width. */
+  background:
+    radial-gradient(72% 70% at 50% 66%,
+      rgba(253, 247, 236, 0.92) 0%,
+      rgba(253, 247, 236, 0.62) 30%,
+      rgba(253, 247, 236, 0.30) 52%,
+      rgba(253, 247, 236, 0.08) 70%,
+      rgba(253, 247, 236, 0) 84%),
+    linear-gradient(145deg,
+      var(--golden-balance) 0%, #F6DFB6 46%, #FAEBCF 78%, #FCF2DF 100%);
+}
+
+/* Five rows: three content rows with an equal flexible spacer between each
+   pair. Contact/Address stay pinned to the top and the wordmark/meta row to
+   the bottom, while the two spacers split the slack evenly — which is what
+   floats Social/Menu to the middle of the section rather than leaving them
+   sitting just under the block above.
+
+   The middle row is centred as a *row*, not per item: giving each block
+   align-self:center instead would centre the 3-link Social and the 5-link
+   Menu independently, and their labels would no longer share a line.
+
+   Placement is explicit because auto-placement would fill the spacer rows, and
+   keyed off modifier classes rather than :nth-of-type so the stacked layout
+   can reset it with a single selector of equal specificity. Both columns being
+   on one grid is also what keeps Social and Menu aligned however tall the
+   blocks above them are. */
+/* Closing echo of the hero. No parallax and no oversizing: the footer is an
+   ordinary block, so the layer sits flush and never travels. */
+.footer__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.10;
+}
+.footer__bg video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr auto 1fr auto;
+  column-gap: clamp(2.5rem, 6vw, 6rem);
+  /* 4vh, not 5: four gaps between five rows, so the viewport-relative term
+     compounds fast enough to push the footer past its own min-height on a
+     short window. */
+  row-gap: clamp(1.5rem, 4vh, 3.5rem);
+  align-items: start;
+  /* Opts out of --section-max. The footer is the page's base, not another
+     panel sitting on it, so it stays flush to the viewport while every
+     section above it holds the cap. Same specificity as .container, and it
+     comes later in the file, so this wins without an !important. */
+  max-width: none;
+}
+
+.footer__block--contact { grid-area: 1 / 1; }
+.footer__block--address { grid-area: 1 / 2; }
+.footer__block--social  { grid-area: 3 / 1; }
+.footer__block--menu    { grid-area: 3 / 2; }
+
+/* Bottom row sits on the floor of its cell. */
+.footer__brand { grid-area: 5 / 1; align-self: end; }
+.footer__meta  { grid-area: 5 / 2; align-self: end; }
+
+.footer__block { min-width: 0; }
+
+.footer__label {
+  font-size: var(--step--1);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--ink-heading);
+}
+
+/* --- contact + address: the informational lines --- */
+.footer__contact {
+  margin-top: 0.9rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.25rem, 2.4vw, 2.15rem);
+  line-height: 1.3;
+  color: var(--footer-info);
+}
+.footer__contact a { transition: color var(--dur) var(--ease-out); }
+.footer__contact a:hover { color: var(--footer-hover); }
+.footer__sep { padding-inline: 0.35em; opacity: 0.7; }
+
+.footer__address {
+  margin-top: 0.9rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  line-height: 1.65;
+  color: var(--footer-info);
+}
+
+/* --- social + menu: the link lists, one treatment for both --- */
+.footer__links {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.footer__links a {
+  /* inline-flex + min-height so each row is a 44px tap target: at mobile type
+     sizes the line box alone is only ~29px, which is under the minimum. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 1.7vw, 1.55rem);
+  line-height: 1.5;
+  color: var(--footer-accent);
+  transition: color var(--dur) var(--ease-out);
+}
+.footer__links a:hover { color: var(--footer-hover); }
+
+/* --- bottom-anchored items --- */
+.footer__brand {
+  display: block;
+  width: clamp(150px, 22vw, 340px);
+}
+.footer__brand img { width: 100%; height: auto; }
+
+.footer__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--step-0);
+  color: var(--ink-heading);
+}
+
+/* Word wrappers injected by the headline scrub. inline-block so filter applies
+   per word and glyphs aren't split; the spaces between them stay real text
+   nodes, so the headline still wraps normally. No will-change — that would
+   promote every word to its own layer for an effect that is only live while
+   the headline is crossing. */
+.word { display: inline-block; }
+
+/* --------------------------------------------------------------------------
+   13. Scroll reveal
+   -------------------------------------------------------------------------- */
+/* Hidden only when JS is available to bring it back — no-JS visitors see
+   the full page immediately. `.js` is set by an inline script in <head>. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  transition-delay: calc(var(--d, 0) * 90ms);
+}
+.js .reveal.is-in { opacity: 1; transform: none; }
+
+/* --------------------------------------------------------------------------
+   14. Responsive
+   -------------------------------------------------------------------------- */
+
+/* --- Tablet --- */
+@media (max-width: 1024px) {
+  /* --- burger nav ---------------------------------------------------------
+     Below 1025 the six links stop fitting the bar, so the row becomes a sheet
+     that hangs off the bar and the button takes its place.
+
+     The sheet is `absolute`, not `fixed`, and that is forced rather than
+     chosen: .nav carries `will-change: transform` (and a real translate once
+     .nav--hidden lands), and either one makes .nav the containing block for
+     fixed descendants — a `position: fixed` panel in here would resolve
+     against the 56px bar instead of the viewport. Absolute against that same
+     bar is honest about it: top:100% puts the sheet directly under the bar and
+     it travels with it. */
+  /* .js-gated, like .reveal: with scripting off the button could never
+     open anything, so the plain scrolling row stays the fallback. */
+  .js .nav__burger { display: grid; }
+
+  .js .nav__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    /* svh, not dvh: a dvh sheet resizes as the mobile URL bar collapses, which
+       makes the whole panel jump mid-open. */
+    height: calc(100svh - var(--nav-h));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: clamp(0.35rem, 1.4vh, 1rem);
+    padding: var(--section-margin)
+             var(--section-margin)
+             calc(var(--section-margin) + env(safe-area-inset-bottom, 0px));
+
+    /* Solid, unlike the bar's 60% glass. The sheet can come down over the
+       gallery or over the CTA photograph, so any translucency makes the link
+       contrast a function of whatever the user happened to scroll to. Opaque
+       holds Rooted Earth at 5.35:1 everywhere instead — AA at any size, AAA at
+       the size these links actually are. */
+    background-color: #F3D4A3;
+    box-shadow: 0 24px 40px -28px rgba(130, 66, 38, 0.55);
+
+    /* A long list on a short landscape phone still has to be reachable. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    /* Closed. visibility, not just opacity — it takes the links out of the tab
+       order and out of the accessibility tree while the sheet is shut, which
+       opacity alone would not do. */
+    opacity: 0;
+    visibility: hidden;
+    translate: 0 -6px;
+    transition: opacity var(--dur) var(--ease-out),
+                translate var(--dur) var(--ease-out),
+                visibility 0s linear var(--dur);
+  }
+
+  .js .nav--menu-open .nav__menu {
+    opacity: 1;
+    visibility: visible;
+    translate: 0 0;
+    transition-delay: 0s;   /* visibility flips in immediately on the way in */
+  }
+
+  .js .nav__menu .nav__link {
+    /* The bar's links are small body type because they share a 56px line. With
+       a whole sheet to themselves they can be what the rest of the page calls
+       a heading — which is also what makes each one a comfortable tap target
+       without padding them out to an arbitrary height. */
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 5.5vw, 2.4rem);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.25;
+    min-height: 0;
+    padding-block: clamp(0.3rem, 1.1vh, 0.6rem);
+    color: var(--ink-heading);
+
+    /* Each link rides in behind the sheet, one after the next. --i is set per
+       link in the markup order by main.js. */
+    opacity: 0;
+    translate: 0 12px;
+    transition: opacity 320ms var(--ease-out),
+                translate 320ms var(--ease-out),
+                color var(--dur) var(--ease-out);
+  }
+  .js .nav--menu-open .nav__menu .nav__link {
+    opacity: 1;
+    translate: 0 0;
+    transition-delay: calc(90ms + var(--i, 0) * 45ms);
+  }
+
+  /* The sheet is ivory whatever is behind it, so the section-aware ink must
+     not follow the page in here — over a dark section --nav-ink goes to Calm
+     Ivory, which on this panel would be ivory on ivory. */
+  .js .nav--menu-open .nav__burger { color: var(--ink-heading); }
+
+  /* And the bar joins the sheet while it is open. Left as 60% glass it keeps
+     showing the photograph through the top 56px with flat ivory directly
+     below, so the two read as two surfaces with a seam between them instead of
+     one. The hairline goes for the same reason. */
+  .js .nav--menu-open {
+    background-color: #F3D4A3;
+    border-bottom-color: transparent;
+  }
+
+  /* Nothing behind the sheet should scroll while it is open. */
+  html.is-menu-open,
+  html.is-menu-open body { overflow: hidden; }
+
+  /* Keep "Created for community." on one line as the column narrows. */
+  .intro__copy .h2 { font-size: clamp(1.65rem, 4.2vw, 2.6rem); }
+
+  /* Copy is meant to run over the photo's soft edge — that is the effect, and
+     it does the same on desktop, where the longest lines reach about 70% of
+     the way through the fade. What breaks at tablet is that the mask is a
+     percentage of the photo, so the fade shrinks with the card while the type
+     stays on its clamp: the same 70% lands on a much shorter ramp, close
+     enough to full opacity to put the ends of lines on hair and cheek. At 768
+     it reached 91% of the fade.
+
+     Capping the measure pulls the ends back onto the transparent part of the
+     ramp. A percentage, not a ch value, because the thing being cleared is
+     geometry — it tracks the column and therefore the panel at every tablet
+     width, where a ch value tracks font size and drifts out of step with it.
+     The desktop 52ch cap is left alone; it never binds below 1025 anyway,
+     computing to ~700px against a ~500px column. */
+  .intro__copy .prose { max-width: 86%; }
+
+  /* Stacked, the image is the only thing that can give height back, so it
+     takes the slack row and the copy sizes itself. An explicit height is what
+     makes 1fr distribute rather than fall back to the item's own size; the
+     minmax floor stops it collapsing to a strip on a very short window. */
+  .petal-story__grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(200px, 1fr) auto;
+    height: calc(100dvh - 2 * var(--section-margin));
+  }
+  .petal-story__figure {
+    /* --px-room is a fixed 112px, which is proportionate against a 718px
+       desktop frame and absurd against a 387px one — the image is oversized by
+       224px top and bottom either way, so at phone size the frame ends up
+       showing barely 60% of the picture and cuts heads and feet off the group.
+       48px still clears the 28px this layer actually travels. */
+    --px-room: 60px;
+    /* Overrides data-parallax="45", which is sized for the desktop frame. The
+       tablet frame is landscape and short, and the group nearly fills it, so a
+       90px swing in here puts the heads 3px from the top edge. 22 keeps the
+       drift while leaving them clear. */
+    --px-amp: 22;
+    order: -1;
+    aspect-ratio: auto;
+    max-height: none;   /* the row already caps it */
+    min-height: 0;      /* grid items floor at min-content otherwise */
+    /* Load-bearing. The grid sets align-items: center, which sizes an item to
+       its own content instead of stretching it; on desktop that is invisible
+       because aspect-ratio derives a height from the width, but this block
+       drops the ratio so the row can cap the height instead. With no ratio and
+       an absolutely positioned <img> — the only child, and out of flow — the
+       figure's content height is 0, so it collapsed to nothing and overflow:
+       hidden clipped the image away entirely. Stretching is what the comment
+       above always assumed: the figure takes the slack row. */
+    align-self: stretch;
+  }
+
+  .mosaic__grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    aspect-ratio: auto;
+    height: clamp(560px, 92vw, 780px);
+  }
+  .tile--craft     { grid-column: 1/3; grid-row: 1; }
+  .tile--still     { grid-column: 3/5; grid-row: 1; }
+  .tile--leaf      { grid-column: 1;   grid-row: 2 / 4; }
+  /* 2 / 4, not row 2 alone: its neighbours on both sides span the pair, so a
+     single-row tile here leaves cell (2, 3) empty and the middle band reads as
+     a missing photo rather than as breathing room. */
+  .tile--walk      { grid-column: 2;   grid-row: 2 / 4; }
+  .tile--reset     { grid-column: 3/5; grid-row: 2 / 4; }
+  .tile--stones    { grid-column: 1/3; grid-row: 4 / 6; }
+  .tile--vista     { grid-column: 3;   grid-row: 4 / 6; }
+  .tile--community { grid-column: 4;   grid-row: 4 / 6; }
+
+  /* Centred here; the desktop inset would only knock it off-centre. */
+  .cta__inner { justify-items: center; padding-inline-end: 0; }
+
+  /* And back to cover. The desktop enlargement exists to bring her head level
+     with the copy beside her — stacked, there is nothing beside her to match,
+     and at 207% she is pushed clean out of a 390px frame. */
+  .cta__subject {
+    background-size: cover;
+    background-position: 42% 82%;
+  }
+}
+
+/* --- Mobile --- */
+@media (max-width: 720px) {
+  :root { --nav-h: 48px; --hero-lift: 22px; }
+
+  /* The panel resolves to photo-over-text rather than two columns, so the
+     end state is taller and the photo takes a share of the height. */
+  .intro {
+    --seq-panel-h: min(86svh, 175vw);
+    --seq-panel-r: var(--r-lg);
+    --seq-photo-w: 100%;
+    --seq-photo-h: 48%;
+    --seq-copy-w:  100%;
+  }
+  .intro__photo {
+    left: 0;
+    object-position: 60% 26%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--seq-mask)), transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 calc(100% - var(--seq-mask)), transparent 100%);
+  }
+  .intro__copy {
+    top: auto;
+    bottom: clamp(1.25rem, 4vw, 2rem);
+    padding-inline: clamp(1.4rem, 6vw, 2.25rem);
+    transform: translateY(var(--seq-copy-y));
+  }
+  /* The stacked card is tight, so this stays below the desktop size — but at
+     --step--1 it was smaller than the page's own body copy, which read as an
+     afterthought rather than the card's main text. */
+  .intro__copy .prose { max-width: none; margin-top: 0.9rem; font-size: var(--step-0); line-height: 1.6; }
+  .intro__copy .eyebrow { margin-bottom: 0.6rem; }
+
+  /* Top-biased on purpose. There is only ~35px of slack between the group and
+     the phone window, and whichever end of them it is spent on is the end that
+     survives a shorter viewport. Faces are the subject, so the slack goes
+     above their heads and any crop comes off the shoes — the reverse of
+     centring them, which leaves the heads one short viewport from clipping. */
+  .petal-story__figure img { object-position: 50% 15%; }
+
+  /* --- Venn: mark and stack -------------------------------------------
+     The diagram's copy is set in artboard units inside the SVG and scales
+     with the container, so at 375px it renders at 5.15px and the titles at
+     10.3px. No CSS value fixes that while the type lives in the drawing, so
+     below 721 the drawing keeps only what reads at any size — the two
+     circles, their gradients and the petal — and the words move out to .venn
+     __stack, where they are set from the page's own scale.
+
+     visibility, not display: the sequence measures these nodes to split the
+     titles into words, and although that call is inside a try/catch, keeping
+     the geometry valid means the phone path takes no different branch than
+     the desktop one. */
+  #TextLeft, #TextRight, #TextMiddle,
+  #PersonalWellness, #CommunitySupport, #TheSinglePetal,
+  #LineLeft, #LineRight, #LineMiddle,
+  #IconSprout, #IconPeople { visibility: hidden; }
+
+  /* Two rows now, so the pair centres as a block rather than each item
+     centring in a stretched cell. */
+  .venn__pin {
+    align-content: center;
+    gap: clamp(1.1rem, 3.6vh, 2rem);
+  }
+  .venn__svg { width: min(74%, 250px); }
+
+  .venn__stack {
+    display: grid;
+    gap: clamp(0.9rem, 3vh, 1.5rem);
+    width: 100%;
+    max-width: 30rem;
+    margin-inline: auto;
+    padding: 0;
+    list-style: none;
+  }
+  .venn__lock { display: grid; gap: 0.25rem; text-align: center; }
+  .venn__lock-t {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-2);      /* ~23px at 375, against 10.3px before */
+    font-weight: 600;
+    line-height: 1.12;
+    color: var(--ink-heading);
+  }
+  .venn__lock-s {
+    margin: 0 auto;
+    max-width: 28ch;
+    font-size: var(--step-0);      /* ~15px at 375, against 5.15px before */
+    line-height: 1.5;
+    color: var(--ink-body);
+  }
+
+  .pillar  { min-height: 0; gap: 1.5rem; }
+  .pillar__text { max-width: none; }
+
+  /* Still row-sized, as at tablet — only the corner softens. */
+  .petal-story__figure { border-radius: var(--r-lg); }
+
+  /* On phones the editorial grid becomes a simple stack: full-bleed banners
+     alternating with square pairs. Row spans are dropped in favour of
+     aspect-ratio so nothing collapses, and `order` re-sequences the tiles. */
+  .mosaic__grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    aspect-ratio: auto;
+    height: auto;
+    min-height: 0;
+    /* The base rule caps the grid at one viewport. Here the rows are `auto`
+       and the tiles carry aspect-ratio, so that cap does not shrink the
+       tiles — it squeezes the *tracks* to an equal share of the cap while
+       each tile still computes its own taller height, and every tile then
+       overflows its row onto the one below. The stack has to be free to run
+       past the fold; .mosaic is min-height, so the section grows with it. */
+    max-height: none;
+  }
+  .mosaic__grid .tile { grid-column: auto; grid-row: auto; aspect-ratio: 1; }
+
+  .mosaic__grid .tile--craft,
+  .mosaic__grid .tile--reset,
+  .mosaic__grid .tile--stones,
+  .mosaic__grid .tile--community { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+
+  .tile--craft     { order: 1; }
+  .tile--leaf      { order: 2; }
+  .tile--walk      { order: 3; }
+  .tile--reset     { order: 4; }
+  .tile--stones    { order: 5; }
+  .tile--still     { order: 6; }
+  .tile--vista     { order: 7; }
+  .tile--community { order: 8; }
+
+  /* Stacked: the copy rides the sky at the top of the frame and the figure
+     keeps the lower half to herself, rather than the two overlapping. The
+     photo already presents that way at this width — cover binds on height, so
+     the full height is in view with the sky at the top.
+
+     Which also means background-position-y does nothing here: there is no
+     vertical overflow left to crop, so the frame cannot be nudged to put
+     brighter sky behind the copy. The wash has to do it instead — and it turns
+     through 90deg to follow the copy, lifting the top rather than the right.
+     Feathered out by 52% so it reads as haze on the upper sky, never an edge. */
+  .cta { align-content: start; }
+  .cta::after {
+    /* Same head blend as desktop, over the stacked layout's own haze — and no
+       foot veil here either, for the same reason. */
+    background:
+      linear-gradient(180deg,
+        #FAEDD6                      0%,
+        rgba(250, 237, 214, 0.60)    6%,
+        rgba(250, 237, 214, 0)      22%),
+      linear-gradient(180deg,
+        rgba(247, 243, 232, 0.35) 0%,
+        rgba(247, 243, 232, 0.22) 26%,
+        rgba(247, 243, 232, 0) 52%);
+  }
+  .cta__card {
+    width: 100%;
+    text-align: left;
+    justify-items: start;
+    padding-top: clamp(1rem, 4vh, 2.5rem);
+  }
+  .cta__card .prose { text-align: left; }
+  .signup__input { text-align: left; }
+
+  /* Stacked: bottom-anchoring stops making sense once the grid is only as
+     tall as its own content, so rows fall back to natural flow. `order`
+     restores the reading sequence — left column top to bottom, then right —
+     which auto-placement would otherwise interleave. */
+  .footer__grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+    row-gap: 2.5rem;
+  }
+  /* Drop the desktop row/column placement — stacked flow is driven by order. */
+  .footer__grid > * { grid-area: auto; }
+  .footer__block:nth-of-type(1) { order: 1; }   /* Contact */
+  .footer__block:nth-of-type(3) { order: 2; }   /* Social  */
+  .footer__brand                { order: 3; align-self: start; }
+  .footer__block:nth-of-type(2) { order: 4; }   /* Address */
+  .footer__block:nth-of-type(4) { order: 5; }   /* Menu    */
+  .footer__meta                 { order: 6; align-self: start; }
+
+  .footer__brand { width: min(58vw, 240px); }
+}
+
+/* --------------------------------------------------------------------------
+   15. Lenis (smooth scrolling)
+
+   Lenis adds these classes to <html> itself. It drives the real document
+   scroll rather than a transform, so nothing here has to compensate for the
+   sticky nav or the pinned intro stage — the only rule that matters is
+   turning off native smooth scrolling, which would otherwise animate the
+   window.scrollTo() calls Lenis makes internally and fight its own easing.
+   Adapted from lenis@1.3.25/dist/lenis.css so the page keeps making no
+   stylesheet request of its own.
+   -------------------------------------------------------------------------- */
+html.lenis,
+html.lenis body { height: auto; }
+
+html.lenis { scroll-behavior: auto; }
+
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch] { overscroll-behavior: contain; }
+
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* --------------------------------------------------------------------------
+   16. Preferences
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Entrances stay, but as a plain crossfade — no travel, no parallax.
+     Opacity alone is safe for vestibular sensitivity; movement is not.
+     !important is needed to survive the blanket transition kill above. */
+  .js .reveal {
+    transform: none !important;
+    transition: opacity 400ms linear !important;
+    transition-delay: 0s !important;
+  }
+  [data-parallax] { transform: none !important; }
+
+  /* The sheet still needs to appear and disappear, but as a crossfade with no
+     travel — and the links arrive with it rather than staggering in. */
+  .js .nav__menu {
+    translate: none !important;
+    transition: opacity 200ms linear, visibility 0s linear 200ms !important;
+  }
+  .js .nav--menu-open .nav__menu {
+    transition: opacity 200ms linear !important;
+  }
+  .js .nav__menu .nav__link {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: none !important;
+  }
+  .tile:hover img { transform: none; }
+
+  /* Hide the moving footage and fall back to the poster still. main.js also
+     pauses the element so it stops decoding frames. */
+  .intro__video { display: none; }
+  .intro__bg {
+    background: url("../assets/video/hero-poster.jpg") center / cover no-repeat;
+  }
+
+  /* No pinned sequence: the stage collapses to the single viewport that holds
+     the finished About composition. main.js sits this out — which is exactly
+     why --seq-mark-o has to be restated here. It is declared 0 and *raised* by
+     the sequence, so with the sequence sitting out, the wordmark and tagline
+     computed to opacity 0 and the hero rendered empty. */
+  .intro { height: auto; --seq-mark-o: 1; }
+
+  /* No load-in either. `animation: none` rather than leaning on the blanket
+     duration kill above: that neutralises animation-duration but not
+     animation-delay, so the tagline halves would still sit invisible for
+     150ms and 250ms and then snap in. */
+  .intro__wordmark,
+  .intro__word { animation: none !important; translate: none !important; }
+
+  /* Same for the Venn: no pin, no runway, no sequence. The section becomes an
+     ordinary block holding the finished diagram, and main.js sits it out. */
+  .venn { height: auto; min-height: var(--section-min); }
+  .venn__pin { position: static; height: auto; }
+  .js .venn__part {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .intro__pin { position: static; }
+  .intro__wordmark,
+  .intro__tagline,
+  .intro__scroll { display: none; }
+}
+
+@media print {
+  .nav, .intro__scroll, .signup { display: none; }
+  .reveal { opacity: 1; transform: none; }
+}

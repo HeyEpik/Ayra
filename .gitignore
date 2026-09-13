@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# local preview noise
+*.log
+__pycache__/

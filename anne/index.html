@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feel Great with Anne | Natural Wellness, Real Results</title>
+<meta name="description" content="How Anne Manata — mom and Metabolic Health Advocate at AYRA — stays light, focused and full of energy every day. Her simple two-step routine, shared with you.">
+<meta property="og:title" content="Feel Great with Anne">
+<meta property="og:description" content="Natural wellness. Real results. Anne's simple daily routine for steady energy and a lighter tummy.">
+<link rel="stylesheet" href="../css/fonts.css">
+<style>
+/* ==========================================================================
+   Feel Great with Anne — personal story / offer page
+
+   Structure mirrors the reference (story → routine → offer → proof → CTA),
+   dressed in the AYRA brand palette and type. Self-contained apart from the
+   shared webfonts in ../css/fonts.css.
+
+   PHOTOS: every <img data-swap> below is a stand-in from the main site.
+   Replace with Anne's own photos (see the comment on each one).
+   ========================================================================== */
+
+:root {
+  --rooted-earth:   #824226;
+  --vitality-glow:  #ED8754;
+  --golden-balance: #F4D5A4;
+  --calm-ivory:     #F7F3E8;
+  --living-green:   #6E891B;
+  --green-deep:     #586E15;  /* Living Green deepened for text surfaces — ivory on it 5.2:1 */
+
+  --ink-heading: var(--rooted-earth);
+  --ink-body:    #7E4C2E;
+  --ink-green:   #4E6112;
+  --ink-glow:    #C85F2C;   /* large orange display text ~3.8:1 */
+  --ink-dark:    #52301B;
+
+  --cream:      #FDF7EC;
+  --gold-soft:  #F7E3B9;
+  --sage:       #DCE3C0;
+  --sage-deep:  #C9D6A6;
+  --peach:      #F5CFA0;
+  --mark:       #F9C6A6;   /* highlighter */
+
+  --font-display: "Publico Text", "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-body:    "Gotham", "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --step--1: clamp(0.78rem, 0.75rem + 0.15vw, 0.86rem);
+  --step-0:  clamp(1.0rem, 0.95rem + 0.25vw, 1.12rem);
+  --step-1:  clamp(1.15rem, 1.05rem + 0.45vw, 1.4rem);
+  --step-2:  clamp(1.6rem, 1.3rem + 1.3vw, 2.4rem);
+  --step-3:  clamp(2.3rem, 1.6rem + 3vw, 4.4rem);
+
+  --r-md: 20px;
+  --r-lg: 32px;
+  --r-pill: 999px;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur: 280ms;
+  --measure: 34rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; color-scheme: light; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+body {
+  margin: 0;
+  background: var(--calm-ivory);
+  color: var(--ink-body);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; color: var(--ink-heading); line-height: 1.08; margin: 0 0 0.6em; letter-spacing: -0.01em; }
+h1 { font-size: var(--step-3); }
+h2 { font-size: var(--step-2); }
+h3 { font-size: var(--step-1); }
+p  { margin: 0 0 1em; max-width: var(--measure); }
+em { font-style: italic; }
+
+.wrap { width: min(100% - 2.5rem, 68rem); margin-inline: auto; }
+.section { padding-block: clamp(3.5rem, 8vw, 7rem); position: relative; }
+
+/* text accents ------------------------------------------------------------ */
+.mark {
+  background: linear-gradient(transparent 38%, var(--mark) 38%, var(--mark) 92%, transparent 92%);
+  padding-inline: 0.15em;
+  border-radius: 2px;
+}
+.mark--green { background-image: linear-gradient(transparent 38%, var(--sage-deep) 38%, var(--sage-deep) 92%, transparent 92%); }
+.ul { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; text-decoration-color: var(--vitality-glow); font-weight: 600; color: var(--ink-heading); }
+.ul--green { text-decoration-color: var(--living-green); }
+.circle {
+  position: relative; display: inline-block; white-space: nowrap;
+}
+.circle svg {
+  position: absolute; inset: -0.35em -0.55em; width: calc(100% + 1.1em); height: calc(100% + 0.7em);
+  pointer-events: none; overflow: visible;
+}
+.circle svg path { fill: none; stroke: var(--vitality-glow); stroke-width: 2.6; stroke-linecap: round; }
+
+.eyebrow {
+  font-size: var(--step--1); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600;
+  color: var(--ink-green); margin-bottom: 1rem;
+}
+
+/* focus + skip link ------------------------------------------------------- */
+:focus-visible { outline: 3px solid var(--vitality-glow); outline-offset: 3px; border-radius: 4px; }
+.skip { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--rooted-earth); color: var(--calm-ivory); padding: .7rem 1.2rem; border-radius: var(--r-pill); text-decoration: none; font-weight: 600; transition: top var(--dur) var(--ease-out); }
+.skip:focus { top: 1rem; }
+
+/* reading progress (storytelling pattern) ---------------------------------- */
+.progress { position: fixed; inset: 0 0 auto 0; height: 4px; z-index: 60; background: rgba(130,66,38,.12); pointer-events: none; }
+.progress i { display: block; height: 100%; width: 100%; background: var(--vitality-glow); transform: scaleX(0); transform-origin: left; }
+
+/* buttons ----------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.6em;
+  min-height: 52px; padding: 0.9rem 2.6rem; border: 0; border-radius: var(--r-pill);
+  font-family: var(--font-body); font-size: var(--step--1); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  line-height: 1; cursor: pointer; text-decoration: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out);
+}
+.btn--earth { background: var(--rooted-earth); color: var(--calm-ivory); box-shadow: 0 14px 30px -16px rgba(130,66,38,.7); }
+.btn--glow  { background: var(--vitality-glow); color: #3d1f10; box-shadow: 0 14px 30px -16px rgba(237,135,84,.8); }
+.btn--ghost { background: transparent; color: var(--ink-heading); box-shadow: inset 0 0 0 2px var(--rooted-earth); }
+.btn--gold  { background: var(--golden-balance); color: var(--ink-heading); box-shadow: 0 14px 30px -16px rgba(0,0,0,.5); }
+.btn:hover  { transform: translateY(-2px); box-shadow: 0 18px 34px -16px rgba(130,66,38,.6); }
+.btn:active { transform: translateY(0) scale(.98); }
+.link-more { display: inline-flex; align-items: center; gap: .5em; min-height: 44px; font-weight: 600; color: var(--ink-heading); text-decoration: none; letter-spacing: .04em; }
+.link-more svg { width: 18px; height: 18px; transition: transform var(--dur) var(--ease-out); }
+.link-more:hover svg { transform: translateX(4px); }
+
+/* ==========================================================================
+   1. Hero
+   ========================================================================== */
+.hero {
+  position: relative; min-height: 92svh; display: grid; align-items: center;
+  background: var(--golden-balance); overflow: hidden; isolation: isolate;
+}
+.hero__photo {
+  position: absolute; inset: 0; z-index: -1;
+}
+.hero__photo img {
+  width: 100%; height: 100%; object-fit: cover; object-position: 75% 30%;
+  filter: saturate(.75) contrast(.95); opacity: .55;
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.35) 35%, #000 70%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.35) 35%, #000 70%);
+}
+.hero__photo::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(244,213,164,0) 60%, var(--golden-balance) 100%);
+}
+.hero__inner { padding-block: clamp(4rem, 10vw, 7rem); max-width: 40rem; }
+.hero h1 { margin-bottom: 1.4rem; }
+.hero h1 .band {
+  display: inline-block; background: var(--living-green); color: var(--calm-ivory);
+  padding: 0.05em 0.25em; margin-top: 0.15em; transform: rotate(-1deg); border-radius: 4px;
+}
+.hero p { font-size: var(--step-0); }
+.hero .flower { display: inline-block; width: 1.05em; height: 1.05em; vertical-align: -0.15em; margin-left: .15em; }
+.hero__cta { display: flex; flex-wrap: wrap; gap: .8rem 1.4rem; align-items: center; margin-top: 1.8rem; }
+
+.brand-tag {
+  display: inline-flex; align-items: center; gap: .6rem; margin-bottom: 1.6rem;
+  font-size: var(--step--1); letter-spacing: .18em; text-transform: uppercase; font-weight: 600; color: var(--ink-green);
+}
+.brand-tag img { height: 1.1rem; width: auto; }
+
+/* ==========================================================================
+   2. Story — green panel
+   ========================================================================== */
+.story { background: var(--sage); }
+.story .grid { display: grid; gap: clamp(2rem, 5vw, 5rem); grid-template-columns: 1.1fr 0.9fr; align-items: center; }
+.story h2 { max-width: 16ch; }
+.polaroid {
+  background: var(--calm-ivory); padding: .8rem .8rem 2.6rem; border-radius: 14px;
+  box-shadow: 0 30px 60px -30px rgba(82,48,27,.5); transform: rotate(2deg);
+  position: relative;
+}
+.polaroid img { border-radius: 8px; aspect-ratio: 4/5; object-fit: cover; }
+.polaroid figcaption { position: absolute; left: 0; right: 0; bottom: .7rem; text-align: center; font-family: var(--font-display); font-style: italic; color: var(--ink-heading); font-size: var(--step-0); }
+
+/* ==========================================================================
+   3. Marquee
+   ========================================================================== */
+.marquee { background: var(--rooted-earth); color: var(--golden-balance); overflow: hidden; padding: .9rem 0; font-family: var(--font-display); font-size: var(--step-1); }
+.marquee__track { display: flex; gap: 0; width: max-content; animation: marquee 28s linear infinite; }
+.marquee__track span { padding-inline: 1.2rem; white-space: nowrap; }
+.marquee__track i { color: var(--vitality-glow); font-style: normal; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
+
+/* ==========================================================================
+   4. Two habit sections
+   ========================================================================== */
+.habit { background: var(--cream); }
+.habit + .habit { background: var(--calm-ivory); }
+.habit .grid { display: grid; gap: clamp(2rem, 5vw, 5rem); grid-template-columns: 1fr 1fr; align-items: center; }
+.habit .grid--flip .photo { order: 2; }
+.photo { border-radius: var(--r-lg); overflow: hidden; box-shadow: 0 30px 60px -30px rgba(82,48,27,.45); position: relative; }
+.photo img { aspect-ratio: 4/5; object-fit: cover; width: 100%; }
+.photo .sticker {
+  position: absolute; right: 1rem; top: 1rem; background: var(--golden-balance); color: var(--ink-heading);
+  font-family: var(--font-display); font-style: italic; padding: .35rem .9rem; border-radius: var(--r-pill);
+  font-size: var(--step--1); transform: rotate(3deg); box-shadow: 0 8px 16px -8px rgba(0,0,0,.3);
+}
+.habit .num {
+  font-family: var(--font-display); color: var(--ink-glow); font-size: var(--step-3); line-height: 1; margin-bottom: .2em;
+}
+
+/* ==========================================================================
+   5. Routine card
+   ========================================================================== */
+.routine { background: var(--sage); }
+.routine__card {
+  background: var(--golden-balance); border-radius: var(--r-lg); padding: clamp(2rem, 5vw, 4rem);
+  position: relative; overflow: hidden; text-align: center;
+  box-shadow: 0 40px 80px -40px rgba(82,48,27,.5);
+}
+.routine__card > * { position: relative; }
+.routine__card p { margin-inline: auto; }
+.burst {
+  position: absolute; width: 220px; height: 220px; background: var(--sage-deep); opacity: .8;
+  clip-path: polygon(50% 0%,61% 12%,76% 6%,80% 21%,96% 24%,91% 39%,100% 50%,91% 61%,96% 76%,80% 79%,76% 94%,61% 88%,50% 100%,39% 88%,24% 94%,20% 79%,4% 76%,9% 61%,0% 50%,9% 39%,4% 24%,20% 21%,24% 6%,39% 12%);
+}
+.burst--l { left: -80px; top: 12%; }
+.burst--r { right: -80px; bottom: 8%; width: 180px; height: 180px; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 2rem auto; max-width: 40rem; text-align: left; }
+.duo__item { background: var(--calm-ivory); border-radius: var(--r-md); padding: 1.2rem 1.3rem; }
+.duo__item h3 { margin-bottom: .3em; }
+.duo__item p { font-size: var(--step--1); margin: 0; line-height: 1.55; }
+.timeline { list-style: none; padding: 0; margin: 1.5rem auto 0; max-width: 30rem; text-align: left; }
+.timeline li { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1rem; padding: .65rem 0; border-bottom: 1px dashed rgba(130,66,38,.35); }
+.timeline li:last-child { border-bottom: 0; }
+.timeline b { font-family: var(--font-display); color: var(--ink-heading); font-weight: 600; }
+.routine__cta { margin-top: 1.6rem; }
+
+/* ==========================================================================
+   6. Offer
+   ========================================================================== */
+.offer { background: var(--green-deep); color: var(--calm-ivory); text-align: center; }
+.offer h2, .offer h3 { color: var(--calm-ivory); }
+.offer p { margin-inline: auto; color: var(--calm-ivory); }
+.offer .lead { font-size: var(--step-1); font-family: var(--font-display); }
+.price { position: relative; display: inline-block; margin: 1.5rem auto .5rem; padding: 1.5rem 3rem; }
+.price__was { font-family: var(--font-display); font-size: var(--step-1); text-decoration: line-through; text-decoration-color: var(--vitality-glow); text-decoration-thickness: 3px; opacity: .8; }
+.price__now { font-family: var(--font-display); font-size: var(--step-3); line-height: 1; font-weight: 600; }
+.price__badge {
+  position: absolute; right: -1.2rem; top: -.4rem; width: 92px; height: 92px; display: grid; place-items: center;
+  background: var(--golden-balance); color: var(--ink-heading); font-family: var(--font-display); font-weight: 600; line-height: .95;
+  transform: rotate(10deg);
+  clip-path: polygon(50% 0%,61% 12%,76% 6%,80% 21%,96% 24%,91% 39%,100% 50%,91% 61%,96% 76%,80% 79%,76% 94%,61% 88%,50% 100%,39% 88%,24% 94%,20% 79%,4% 76%,9% 61%,0% 50%,9% 39%,4% 24%,20% 21%,24% 6%,39% 12%);
+}
+.price__badge b { font-size: 1.5rem; display: block; }
+.offer .fine { font-size: var(--step--1); }
+.cta-row { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; margin-top: 1.4rem; }
+.offer .btn--ghost { color: var(--calm-ivory); box-shadow: inset 0 0 0 2px var(--calm-ivory); }
+.offer .btn--ghost:hover { background: rgba(255,255,255,.1); }
+
+/* wavy divider between offer and proof */
+.wave { display: block; width: 100%; height: 40px; }
+
+/* ==========================================================================
+   7. Proof — carousel
+   ========================================================================== */
+.proof { background: var(--cream); }
+.proof h2 { text-align: center; }
+.carousel { position: relative; max-width: 44rem; margin: 2rem auto 0; }
+.carousel__viewport { overflow: hidden; border-radius: var(--r-lg); }
+.carousel__track { display: flex; transition: transform 480ms var(--ease-out); }
+.slide { flex: 0 0 100%; padding: clamp(1.5rem, 4vw, 3rem); background: var(--golden-balance); min-height: 14rem; display: grid; align-content: center; }
+.slide blockquote { margin: 0; font-family: var(--font-display); font-size: var(--step-1); color: var(--ink-heading); line-height: 1.35; }
+.slide__who { display: flex; align-items: center; gap: .8rem; margin-top: 1.2rem; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--sage-deep); color: var(--ink-green); display: grid; place-items: center; font-family: var(--font-display); font-weight: 600; flex: none; overflow: hidden; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.slide blockquote::before { content: "“"; color: var(--vitality-glow); font-size: 2em; line-height: 0; vertical-align: -0.35em; margin-right: .1em; }
+.slide cite { display: block; font-style: normal; font-size: var(--step--1); line-height: 1.4; color: var(--ink-green); }
+.slide cite b { display: block; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+.carousel__nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+.carousel__btn { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--rooted-earth); color: var(--calm-ivory); font-size: 1.2rem; cursor: pointer; display: grid; place-items: center; }
+.carousel__btn:hover { background: var(--ink-dark); }
+.carousel__btn svg { width: 20px; height: 20px; }
+.carousel__count { font-size: var(--step--1); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-green); }
+
+/* ==========================================================================
+   8. Final CTA + footer
+   ========================================================================== */
+.final { background: var(--golden-balance); text-align: center; }
+.final p { margin-inline: auto; }
+.final .lead { font-family: var(--font-display); font-size: var(--step-1); color: var(--ink-heading); }
+.dashes { height: 10px; background: repeating-linear-gradient(90deg, var(--rooted-earth) 0 18px, transparent 18px 32px); mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); height: 3px; width: 60%; margin: 2.5rem auto 0; }
+
+footer { background: var(--rooted-earth); color: var(--golden-balance); padding: 2rem 0; font-size: var(--step--1); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
+footer a { color: var(--golden-balance); text-decoration: none; }
+footer a:hover { color: var(--vitality-glow); }
+footer img { height: 1.1rem; width: auto; opacity: .9; }
+.footer__links { display: flex; gap: .4rem; }
+.footer__links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .6rem; }
+.disclaimer { width: 100%; opacity: .7; font-size: .75rem; margin-top: .5rem; max-width: none; }
+
+/* sticky offer bar (shows after the hero, hides while the offer is on screen) */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .7rem max(1rem, env(safe-area-inset-right)) calc(.7rem + env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  background: var(--calm-ivory); border-top: 1px solid rgba(130,66,38,.18);
+  box-shadow: 0 -12px 30px -18px rgba(82,48,27,.4);
+  transform: translateY(110%); transition: transform 320ms var(--ease-out);
+}
+.bar.is-on { transform: none; }
+.bar__price { display: flex; flex-direction: column; line-height: 1.15; }
+.bar__price b { font-family: var(--font-display); font-size: var(--step-1); color: var(--ink-heading); }
+.bar__price small { font-size: var(--step--1); color: var(--ink-green); font-weight: 600; letter-spacing: .06em; }
+.bar .btn { min-height: 48px; padding-inline: 1.8rem; }
+@media (min-width: 861px) { .bar { display: none; } }
+body.has-bar .chat { bottom: calc(5.6rem + env(safe-area-inset-bottom)); }
+
+/* floating chat bubble --------------------------------------------------- */
+.chat {
+  position: fixed; right: 1.2rem; bottom: calc(1.2rem + env(safe-area-inset-bottom)); z-index: 50; transition: bottom 320ms var(--ease-out), transform var(--dur) var(--ease-out);
+  width: 56px; height: 56px; border-radius: 50%; background: var(--vitality-glow); color: #3d1f10;
+  display: grid; place-items: center; text-decoration: none;
+  box-shadow: 0 14px 30px -10px rgba(82,48,27,.6);
+  transition: transform var(--dur) var(--ease-out);
+}
+.chat:hover { transform: translateY(-3px) scale(1.04); }
+.chat:active { transform: scale(.96); }
+.chat svg { width: 26px; height: 26px; }
+
+/* reveal on scroll -------------------------------------------------------- */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); }
+.reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+/* responsive ------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .story .grid, .habit .grid { grid-template-columns: 1fr; }
+  .habit .grid--flip .photo { order: 0; }
+  .polaroid { max-width: 22rem; margin-inline: auto; }
+  .photo img { aspect-ratio: 4/3; }
+  .duo { grid-template-columns: 1fr; }
+  .hero__photo img { mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.6) 40%, #000 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.6) 40%, #000 100%); object-position: 60% 20%; opacity: .35; }
+  .price__badge { right: -.5rem; width: 78px; height: 78px; }
+  .price__badge b { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"><i id="progress"></i></div>
+
+<!-- ======================================================================
+     1. HERO
+     ====================================================================== -->
+<header class="hero" id="hero">
+  <div class="hero__photo" aria-hidden="true">
+    <!-- PHOTO: swap for a candid of Anne (mid-motion, smiling — like the reference). Landscape or square, ≥1600px wide. -->
+    <img data-swap src="../assets/img/portrait-sunlit.jpg" alt="" width="1800" height="1931" fetchpriority="high">
+  </div>
+  <div class="wrap">
+    <div class="hero__inner">
+      <div class="brand-tag"><img src="../assets/brand/AYRA_Logo_Black.svg" alt="AYRA"> Metabolic Health Advocate</div>
+      <h1>How Nanay <span style="white-space:nowrap">Keeps It</span><br><span class="band">All Together</span></h1>
+      <p>Hi, I’m <a class="ul" href="https://www.instagram.com/anne.manata/" target="_blank" rel="noopener">Anne Manata</a> — mom, Metabolic Health Advocate, and someone who’s always on the go.</p>
+      <p>Every day is a beautiful mix of family, work, and little moments I try to make count.</p>
+      <p>People often ask me, <span class="ul ul--green">“Anne, paano mo nagagawa lahat?”</span></p>
+      <p>To be honest, it’s not always easy.</p>
+      <p>But I’ve learned a few small things that help me stay balanced — and one of them has truly changed how I feel every single day. <svg class="flower" viewBox="0 0 24 24" aria-hidden="true"><g fill="#ED8754"><ellipse cx="12" cy="4" rx="2.4" ry="4"/><ellipse cx="12" cy="20" rx="2.4" ry="4"/><ellipse cx="4" cy="12" rx="4" ry="2.4"/><ellipse cx="20" cy="12" rx="4" ry="2.4"/><ellipse cx="6.3" cy="6.3" rx="2.4" ry="4" transform="rotate(-45 6.3 6.3)"/><ellipse cx="17.7" cy="17.7" rx="2.4" ry="4" transform="rotate(-45 17.7 17.7)"/><ellipse cx="17.7" cy="6.3" rx="2.4" ry="4" transform="rotate(45 17.7 6.3)"/><ellipse cx="6.3" cy="17.7" rx="2.4" ry="4" transform="rotate(45 6.3 17.7)"/></g><circle cx="12" cy="12" r="3.6" fill="#824226"/></svg></p>
+      <div class="hero__cta">
+        <a class="btn btn--earth" href="#offer">Start Your Order</a>
+        <a class="link-more" href="#story">Read my story <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ======================================================================
+     2. STORY
+     ====================================================================== -->
+<main id="main">
+<section class="section story" id="story">
+  <div class="wrap grid">
+    <div class="reveal">
+      <h2>It’s Not About Doing More… It’s About <span class="circle">Feeling Better<svg viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M12 30 C 20 6, 180 2, 190 26 S 150 60, 60 56 S 4 46, 12 30"/></svg></span></h2>
+      <p>Before, I used to rely on coffee (and maybe a little too much of it!) to power through my day.</p>
+      <p>Pero alam mo ’yun — that crash after lunch? The feeling na parang drained ka na kahit hindi pa hapon?</p>
+      <p>That’s when I realized — <span class="ul">what I put <em>inside</em> my body matters more</span> than how hard I try to push myself.</p>
+      <p>When I started taking care of my gut and my energy levels, everything else followed — focus, mood, even confidence.</p>
+      <p>Now I have two little tools that keep my energy steady and my tummy light.</p>
+      <p>They’re not magic. Just part of my quiet self-care routine — <em>natural wellness, real results.</em></p>
+    </div>
+    <figure class="polaroid reveal">
+      <!-- PHOTO: Anne, relaxed portrait (park, home, or with her tea). Portrait 4:5. -->
+      <img data-swap src="../assets/img/community-park.jpg" alt="Anne, relaxed and smiling outdoors" width="798" height="1409" loading="lazy" decoding="async">
+      <figcaption>a lighter, happier nanay</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======================================================================
+     3. MARQUEE
+     ====================================================================== -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>Natural Wellness <i>•</i></span><span>Real Results <i>•</i></span><span>Gut Healing <i>•</i></span><span>Steady Energy <i>•</i></span>
+    <span>Natural Wellness <i>•</i></span><span>Real Results <i>•</i></span><span>Gut Healing <i>•</i></span><span>Steady Energy <i>•</i></span>
+    <span>Natural Wellness <i>•</i></span><span>Real Results <i>•</i></span><span>Gut Healing <i>•</i></span><span>Steady Energy <i>•</i></span>
+    <span>Natural Wellness <i>•</i></span><span>Real Results <i>•</i></span><span>Gut Healing <i>•</i></span><span>Steady Energy <i>•</i></span>
+  </div>
+</div>
+
+<!-- ======================================================================
+     4. HABIT 1 — Yerba Mate
+     ====================================================================== -->
+<section class="section habit">
+  <div class="wrap grid">
+    <div class="photo reveal">
+      <!-- PHOTO: Anne holding her tea / mixing Unimate in the morning. -->
+      <img data-swap src="../assets/img/reset.jpg" alt="Anne with her morning yerba mate tea" width="1200" height="675" loading="lazy" decoding="async">
+      <span class="sticker">my morning ritual</span>
+    </div>
+    <div class="reveal">
+      <div class="num">01</div>
+      <h2>Morning Mix That Keeps Me Light</h2>
+      <p>Every morning, before I start my day, I take a few minutes just for me.</p>
+      <p>I mix my <span class="mark">Yerba Mate tea</span> with hot or cold water (depending on the mood!). My favorite is the Lemon Ginger flavor with hot water.</p>
+      <p>I love that it keeps me <span class="ul">sharp and calm</span> throughout the day — no overstimulation, no sudden crash, and definitely no burnout.</p>
+      <p>Just enough boost to power through everything I need to do, while still having the energy and presence to enjoy quality time with my family later on.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================
+     5. HABIT 2 — Fiber Matrix
+     ====================================================================== -->
+<section class="section habit">
+  <div class="wrap grid grid--flip">
+    <div class="photo reveal">
+      <!-- PHOTO: Anne at a meal with family/friends (the "I love to eat!" shot). -->
+      <img data-swap src="../assets/img/community.jpg" alt="Anne enjoying a meal with family" width="1500" height="880" loading="lazy" decoding="async">
+      <span class="sticker">food freedom :)</span>
+    </div>
+    <div class="reveal">
+      <div class="num">02</div>
+      <h2>No Sugar Crashes</h2>
+      <p><span class="ul">I love to eat!</span> Pero before I put anything in my mouth sa lunch or dinner, I make sure to take my <span class="mark">Special Fiber Matrix</span> first.</p>
+      <p>It helps manage the glucose spikes para hindi din matindi ang crash after meals. Kaya tuloy-tuloy pa rin ang <span class="ul ul--green">fat-burning mode</span> ng katawan ko.</p>
+      <p>Perfect siya lalo na sa mga araw na gusto kong i-maintain ang energy ko without feeling sluggish or craving sweets.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================
+     6. ROUTINE
+     ====================================================================== -->
+<section class="section routine">
+  <div class="wrap">
+    <div class="routine__card reveal">
+      <div class="burst burst--l" aria-hidden="true"></div>
+      <div class="burst burst--r" aria-hidden="true"></div>
+      <div class="eyebrow">So… what’s the secret?</div>
+      <h2>These two are my daily essentials.</h2>
+      <div class="duo">
+        <div class="duo__item">
+          <h3>Yerba Mate</h3>
+          <p>Energy, mental clarity and focus. It also helps curb my appetite.</p>
+        </div>
+        <div class="duo__item">
+          <h3>Special Fiber Matrix</h3>
+          <p>Manages my sugar spikes, keeping my energy steady all day.</p>
+        </div>
+      </div>
+      <p><span class="mark">Here’s my simple routine:</span></p>
+      <ul class="timeline">
+        <li><b>Morning</b><span>Yerba Mate replaces breakfast.</span></li>
+        <li><b>12 PM</b><span>Special Fiber Matrix before lunch.</span></li>
+        <li><b>Optional</b><span>Another Yerba Mate after lunch for long days.</span></li>
+        <li><b>4 PM</b><span>Light snack.</span></li>
+        <li><b>7 PM</b><span>Special Fiber Matrix before dinner.</span></li>
+      </ul>
+      <p style="margin-top:1.6rem">They’re my <span class="circle">little daily secret<svg viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M12 30 C 20 6, 180 2, 190 26 S 150 60, 60 56 S 4 46, 12 30"/></svg></span> — the reason I can stay light, focused, and full of energy all day.</p>
+      <div class="routine__cta"><a class="link-more" href="#offer">Get the duo I use <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================
+     7. OFFER
+     ====================================================================== -->
+<section class="section offer" id="offer">
+  <div class="wrap">
+    <h2 class="reveal">I’m Sharing This With You</h2>
+    <p class="lead reveal">I know how hard it is to juggle so much and still feel your best. That’s why I’m sharing this — so you can try my Feel Great Duo too.</p>
+    <p class="reveal">For a limited time, you get <strong>20% off</strong> when you grab the package good for 30 days. The discount is applied automatically at checkout.</p>
+    <p class="reveal">No strict diets. No complicated routines. Just small habits that make a big difference.</p>
+
+    <div class="price reveal">
+      <div class="price__badge" aria-label="20 percent off"><span><b>20%</b>off</span></div>
+      <div class="price__was">₱ 11,870.00</div>
+      <div class="price__now">₱ 9,490.00</div>
+    </div>
+    <p class="fine">Available in 60+ countries all over the world.</p>
+
+    <div class="cta-row reveal">
+      <a class="btn btn--gold" href="https://ufeelgreat.com/c/857A57" target="_blank" rel="noopener">Buy Now</a>
+      <a class="btn btn--ghost" href="https://ufeelgreat.com/c/857A57" target="_blank" rel="noopener">Choose Country</a>
+    </div>
+  </div>
+</section>
+<svg class="wave" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" style="background:var(--cream)"><path d="M0 0 L1200 0 L1200 8 L600 40 L0 8 Z" fill="#586E15"/></svg>
+
+<!-- ======================================================================
+     8. PROOF
+     ====================================================================== -->
+<section class="section proof">
+  <div class="wrap">
+    <div class="eyebrow" style="text-align:center">Teastimony</div>
+    <h2>Real Stories, Real Results</h2>
+    <div class="carousel reveal" role="region" aria-roledescription="carousel" aria-label="Customer stories" tabindex="0">
+      <div class="carousel__viewport">
+        <div class="carousel__track" id="track">
+          <!-- TESTIMONIALS: paste real ones from Anne's "Teastimony" highlight, in the customer's own words.
+               Photo + name + role converts best; swap the initials <div class="avatar"> for <div class="avatar"><img src="…" alt=""></div> when you have a photo. -->
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="1 of 3">
+            <blockquote>[Testimonial 1 — paste from the Teastimony highlight]</blockquote>
+            <div class="slide__who"><div class="avatar" aria-hidden="true">AB</div><cite><b>Name</b>Mom of two · Quezon City</cite></div>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="2 of 3">
+            <blockquote>[Testimonial 2]</blockquote>
+            <div class="slide__who"><div class="avatar" aria-hidden="true">CD</div><cite><b>Name</b>Role · City</cite></div>
+          </div>
+          <div class="slide" role="group" aria-roledescription="slide" aria-label="3 of 3">
+            <blockquote>[Testimonial 3]</blockquote>
+            <div class="slide__who"><div class="avatar" aria-hidden="true">EF</div><cite><b>Name</b>Role · City</cite></div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel__nav">
+        <button class="carousel__btn" id="prev" aria-label="Previous story" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+        <span class="carousel__count" id="count" aria-live="polite">Item 1 of 3</span>
+        <button class="carousel__btn" id="next" aria-label="Next story" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================
+     9. FINAL CTA
+     ====================================================================== -->
+<section class="section final">
+  <div class="wrap">
+    <h2 class="reveal">Ready to Feel<br>the Difference?</h2>
+    <p class="lead reveal">Because when you feel light, energized, and confident<br>you don’t just survive your day…<br>You <em>own</em> it.</p>
+    <a class="btn btn--earth reveal" href="https://ufeelgreat.com/c/857A57" target="_blank" rel="noopener">Start Your Order</a>
+    <div class="dashes" aria-hidden="true"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a href="../index.html" aria-label="AYRA"><img src="../assets/brand/AYRA_Logo_White.svg" alt="AYRA"></a>
+    <nav class="footer__links">
+      <a href="https://www.instagram.com/anne.manata/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://ufeelgreat.com/c/857A57" target="_blank" rel="noopener">Shop</a>
+      <a href="#offer">Offer</a>
+    </nav>
+    <p class="disclaimer">Social Media Adv Permit 1395655. Results vary. This page shares Anne’s personal routine and is not medical advice — consult your doctor before starting any new supplement.</p>
+  </div>
+</footer>
+
+<div class="bar" id="bar" aria-hidden="true">
+  <div class="bar__price"><small>20% OFF · 30 DAYS</small><b>₱ 9,490.00</b></div>
+  <a class="btn btn--glow" href="https://ufeelgreat.com/c/857A57" target="_blank" rel="noopener" tabindex="-1">Buy Now</a>
+</div>
+
+<a class="chat" href="https://ig.me/m/anne.manata" target="_blank" rel="noopener" aria-label="Message Anne on Instagram">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.6-.8L3 21l1.9-4.6A8.4 8.4 0 0 1 3 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 9 8.4z"/></svg>
+</a>
+
+<script>
+  // Carousel
+  (function () {
+    const track = document.getElementById('track');
+    const slides = track.children.length;
+    const count = document.getElementById('count');
+    let i = 0;
+    const go = (n) => {
+      i = (n + slides) % slides;
+      track.style.transform = `translateX(-${i * 100}%)`;
+      count.textContent = `Item ${i + 1} of ${slides}`;
+    };
+    document.getElementById('prev').addEventListener('click', () => go(i - 1));
+    document.getElementById('next').addEventListener('click', () => go(i + 1));
+    // keyboard: arrows when the carousel region has focus
+    track.closest('.carousel').addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); go(i - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(i + 1); }
+    });
+    // swipe
+    let x0 = null;
+    track.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) go(dx < 0 ? i + 1 : i - 1);
+      x0 = null;
+    });
+  })();
+
+  // Reading progress
+  (function () {
+    const bar = document.getElementById('progress');
+    let ticking = false;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(update); ticking = true; } }, { passive: true });
+    update();
+  })();
+
+  // Sticky offer bar: on after the hero scrolls away, off while the offer / final CTA is on screen
+  (function () {
+    const bar = document.getElementById('bar');
+    if (!('IntersectionObserver' in window)) return;
+    let heroGone = false; const visibleCtas = new Set();
+    const sync = () => {
+      const on = heroGone && visibleCtas.size === 0;
+      bar.classList.toggle('is-on', on);
+      bar.setAttribute('aria-hidden', String(!on));
+      bar.querySelector('a').tabIndex = on ? 0 : -1;
+      document.body.classList.toggle('has-bar', on && window.innerWidth <= 860);
+    };
+    new IntersectionObserver(([e]) => { heroGone = !e.isIntersecting; sync(); }, { threshold: 0.05 }).observe(document.getElementById('hero'));
+    const cta = new IntersectionObserver((entries) => { entries.forEach(e => e.isIntersecting ? visibleCtas.add(e.target) : visibleCtas.delete(e.target)); sync(); }, { threshold: 0.1 });
+    document.querySelectorAll('#offer, .final').forEach(el => cta.observe(el));
+    window.addEventListener('resize', sync, { passive: true });
+  })();
+
+  // Reveal on scroll
+  (function () {
+    const els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('is-in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+    }, { threshold: 0.15 });
+    els.forEach(el => io.observe(el));
+  })();
+</script>
+</body>
+</html>
